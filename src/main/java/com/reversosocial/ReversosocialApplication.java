@@ -8,6 +8,7 @@ public class ReversosocialApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ReversosocialApplication.class, args);
+		System.out.println("Hello World");
 	}
 
 }
