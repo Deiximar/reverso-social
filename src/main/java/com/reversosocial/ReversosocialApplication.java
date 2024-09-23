@@ -1,4 +1,4 @@
-package com.reversosocial.reversosocial;
+package com.reversosocial;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
