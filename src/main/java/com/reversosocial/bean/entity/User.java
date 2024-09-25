@@ -1,4 +1,5 @@
 package com.reversosocial.bean.entity;
+
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -20,8 +21,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -29,32 +28,32 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int Id;
-    @Column(nullable = false, unique = true)
-    private String username;
-    @Column(nullable = false)
-    private String name;
-    @Column(nullable = false)
-    private String lastname;
-    @Column(nullable = false)
-    private LocalDate birthday;
-    @Column(nullable = false)
-    private String password;
-    @Column(unique = true, name = "email", nullable = false)
-    private String email;
-    @ManyToOne
-    @JoinColumn(name = "rol_id, nullable = false")
-    private Role role;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private int Id;
+  @Column(nullable = false, unique = true)
+  private String username;
+  @Column(nullable = false)
+  private String name;
+  @Column(nullable = false)
+  private String lastname;
+  @Column(nullable = false)
+  private LocalDate birthday;
+  @Column(nullable = false)
+  private String password;
+  @Column(unique = true, name = "email", nullable = false)
+  private String email;
+  @ManyToOne
+  @JoinColumn(name = "rol_id, nullable = false")
+  private Role role;
 
-    @Override
+  @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return List.of(new SimpleGrantedAuthority("USER"));
   }
+
   @Override
   public String getUsername() {
     return this.email;
   }
 }
-

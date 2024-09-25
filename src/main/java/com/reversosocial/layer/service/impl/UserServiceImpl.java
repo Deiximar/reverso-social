@@ -1,15 +1,9 @@
 package com.reversosocial.layer.service.impl;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.reversosocial.bean.dto.AuthResponseDto;
 import com.reversosocial.bean.dto.RegisterDto;
 import com.reversosocial.bean.entity.User;
 import com.reversosocial.config.exception.ExistingEmailException;
@@ -19,7 +13,6 @@ import com.reversosocial.layer.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -28,21 +21,26 @@ public class UserServiceImpl implements UserService {
   private final JWTAuthenticationConfig jwtAuthenticationConfig;
   private final AuthenticationManager authenticationManager;
 
-//   @Override
-//   public AuthResponseDto login(LoginDto request) {
-//     UserEntity user = userRepository.findByEmail(request.getEmail())
-//         .orElseThrow(() -> new UsernameNotFoundException(
-//             "Invalid email or password."));
-//     authenticationManager
-//         .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-//     String token = jwtUtil.generateToken(user.getEmail());
-//     return new AuthResponseDto(token);
-//   }
+  // @Override
+  // public AuthResponseDto login(LoginDto request) {
+  // UserEntity user = userRepository.findByEmail(request.getEmail())
+  // .orElseThrow(() -> new UsernameNotFoundException(
+  // "Invalid email or password."));
+  // authenticationManager
+  // .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),
+  // request.getPassword()));
+  // String token = jwtUtil.generateToken(user.getEmail());
+  // return new AuthResponseDto(token);
+  // }
 
   @Override
   public String register(RegisterDto request) {
+    System.out.println(request.getBirthday());
     if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-      throw new ExistingEmailException("This email is already taken");
+      throw new ExistingEmailException("Este correo electronico ya esta en uso.");
+    }
+    if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+      throw new ExistingEmailException("Este nombre  de usuario ya esta en uso.");
     }
 
     User user = new User();
@@ -53,7 +51,6 @@ public class UserServiceImpl implements UserService {
     user.setBirthday(request.getBirthday());
     user.setPassword(passwordEncoder.encode(request.getPassword()));
     userRepository.save(user);
-        return ("Usuario registrado exitosamente");
+    return ("Usuario registrado exitosamente");
   }
 }
-
