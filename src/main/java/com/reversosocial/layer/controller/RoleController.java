@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/role")
-public class RolesController {
+public class RoleController {
 
     @Autowired
     private RoleRepository roleRepository;
