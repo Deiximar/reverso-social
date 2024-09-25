@@ -50,13 +50,33 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(HttpMessageNotReadableException.class)
   public ResponseEntity<ErrorObject> handleInvalidDateFormat(HttpMessageNotReadableException ex) {
     ErrorObject errorObject = new ErrorObject();
+
     errorObject.setStatusCode(HttpStatus.BAD_REQUEST.value());
-    if (ex.getMessage().contains("JSON parse error")) {
-      errorObject.setMessage("Fecha inválida. El formato debe ser yyyy-mm-dd");
+    if (ex.getMessage().contains("DateTimeParseException")) {
+      errorObject.setMessage("La fecha debe tener el formato yyyy-MM-dd");
     } else {
       errorObject.setMessage("Error al procesar la solicitud");
     }
     errorObject.setTimestamp(new Date());
     return new ResponseEntity<>(errorObject, HttpStatus.BAD_REQUEST);
   }
+
+  @ExceptionHandler(UsernameNotFoundException.class)
+  public ResponseEntity<ErrorObject> handleUsernameNotFoundException(UsernameNotFoundException ex) {
+    ErrorObject errorObject = new ErrorObject();
+    errorObject.setStatusCode(HttpStatus.UNAUTHORIZED.value());
+    errorObject.setMessage(ex.getMessage());
+    errorObject.setTimestamp(new Date());
+    return new ResponseEntity<ErrorObject>(errorObject, HttpStatus.UNAUTHORIZED);
+  }
+
+  @ExceptionHandler(InvalidCredentialsException.class)
+  public ResponseEntity<ErrorObject> handleInvalidCredentialsException(InvalidCredentialsException ex) {
+    ErrorObject errorObject = new ErrorObject();
+    errorObject.setStatusCode(HttpStatus.UNAUTHORIZED.value());
+    errorObject.setMessage(ex.getMessage());
+    errorObject.setTimestamp(new Date());
+    return new ResponseEntity<>(errorObject, HttpStatus.UNAUTHORIZED);
+  }
+
 }

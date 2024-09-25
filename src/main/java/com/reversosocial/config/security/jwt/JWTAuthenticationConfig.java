@@ -27,7 +27,7 @@ public class JWTAuthenticationConfig {
     private Key getSigningKey() {
         byte[] keyBytes = JWT_SECRET_KEY.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
-      }
+    }
 
     public String getJWToken(String email) {
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("USER");
@@ -42,7 +42,7 @@ public class JWTAuthenticationConfig {
                                 .collect(Collectors.toList()))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_TIME))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS512).compact();
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
 
         return token;
     }
@@ -63,11 +63,11 @@ public class JWTAuthenticationConfig {
 
     private boolean isTokenExpired(String token) {
         final Date expiration = Jwts.parserBuilder()
-            .setSigningKey(getSigningKey())
-            .build()
-            .parseClaimsJws(token)
-            .getBody()
-            .getExpiration();
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getExpiration();
         return expiration.before(new Date());
-      }
+    }
 }
