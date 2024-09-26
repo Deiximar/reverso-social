@@ -18,6 +18,7 @@ import com.reversosocial.bean.dto.RegisterDto;
 import com.reversosocial.bean.entity.ERole;
 import com.reversosocial.bean.entity.Role;
 import com.reversosocial.bean.entity.User;
+import com.reversosocial.config.exception.ExistingEmailException;
 import com.reversosocial.layer.repository.RoleRepository;
 import com.reversosocial.layer.repository.UserRepository;
 import com.reversosocial.layer.service.impl.UserServiceImpl;
@@ -25,6 +26,8 @@ import com.reversosocial.layer.service.impl.UserServiceImpl;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -110,4 +113,41 @@ public class UserServiceImplTest {
     assertEquals(userRole, savedUser.getRoles().iterator().next());
     assertEquals(newUser.getEmail(), savedUser.getEmail());
   }
+
+  @Test
+  void shouldThrowExceptionWhenEmailAlreadyExists() {
+    // given
+    User newUser = new User();
+    newUser.setId(3);
+    newUser.setName("user");
+    newUser.setLastname("user");
+    newUser.setEmail("user@gmail.com");
+    newUser.setPassword("password123");
+    newUser.setUsername("user");
+    newUser.setBirthday(LocalDate.of(1995, 5, 5));
+
+    RegisterDto userDto = new RegisterDto();
+    userDto.setName(newUser.getName());
+    userDto.setLastname(newUser.getLastname());
+    userDto.setEmail(newUser.getEmail());
+    userDto.setPassword(newUser.getPassword());
+    userDto.setUsername(newUser.getUsername());
+    userDto.setBirthday(newUser.getBirthday());
+
+    User existingUser = new User();
+    existingUser.setEmail("user@gmail.com");
+
+    given(userRepository.findByEmail(userDto.getEmail())).willReturn(Optional.of(existingUser));
+    String responseMessage = "Este correo electronico ya esta en uso.";
+
+    // when & then
+    ExistingEmailException response = assertThrows(ExistingEmailException.class, () -> {
+      userService.register(userDto);
+    });
+
+    verify(userRepository, times(0)).save(any(User.class));
+    assertEquals(responseMessage, response.getMessage());
+
+  }
+
 }
