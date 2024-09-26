@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,23 +11,33 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
+import com.reversosocial.bean.dto.AuthResponseDto;
+import com.reversosocial.bean.dto.LoginDto;
 import com.reversosocial.bean.dto.RegisterDto;
 import com.reversosocial.bean.entity.ERole;
 import com.reversosocial.bean.entity.Role;
 import com.reversosocial.bean.entity.User;
 import com.reversosocial.config.exception.ExistingEmailException;
 import com.reversosocial.config.exception.ExistingUsernameException;
+import com.reversosocial.config.exception.InvalidCredentialsException;
+import com.reversosocial.config.exception.UsernameNotFoundException;
 import com.reversosocial.layer.repository.RoleRepository;
 import com.reversosocial.layer.repository.UserRepository;
 import com.reversosocial.layer.service.impl.UserServiceImpl;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import com.reversosocial.config.security.jwt.JWTAuthenticationConfig;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -43,6 +52,12 @@ public class UserServiceImplTest {
 
   @Mock
   RoleRepository roleRepository;
+
+  @Mock
+  JWTAuthenticationConfig jwtAuthenticationConfig;
+
+  @Mock
+  AuthenticationManager authenticationManager;
 
   @InjectMocks
   UserServiceImpl userService;
@@ -185,4 +200,64 @@ public class UserServiceImplTest {
     verify(userRepository, times(0)).save(any(User.class));
     assertEquals(responseMessage, response.getMessage());
   }
+
+
+  @Test 
+  void shouldLoginUserSuccessfully() {
+    // given
+    LoginDto request = new LoginDto();
+    request.setEmail("test@test.com");
+    request.setPassword("password123");
+    User user = new User();
+    user.setEmail("test@test.com");
+    String token = "mockedJwtToken";
+    given(userRepository.findByEmail(request.getEmail())).willReturn(Optional.of(user));
+    given(jwtAuthenticationConfig.getJWToken(user.getEmail())).willReturn(token);
+    Authentication auth = mock(Authentication.class);
+    given(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).willReturn(auth);
+    // when
+    AuthResponseDto response = userService.login(request);
+    // then
+    assertEquals(token, response.getAccessToken());
+
+  }
+
+  @Test
+    void shouldThrowInvalidCredentialsExceptionWhenBadCredentials() {
+        // given
+        LoginDto LoginDto = new LoginDto();
+        LoginDto.setEmail("test@test.com");
+        LoginDto.setPassword("wrongPassword");
+
+        User user = new User();
+        user.setEmail("test@test.com");
+
+        given(userRepository.findByEmail(LoginDto.getEmail())).willReturn(Optional.of(user));
+
+        doThrow(new BadCredentialsException("Invalid password"))
+            .when(authenticationManager)
+            .authenticate(any(UsernamePasswordAuthenticationToken.class));
+
+        // when & then
+        assertThrows(InvalidCredentialsException.class, () -> {
+            userService.login(LoginDto);
+        });
+    }
+
+    @Test
+    void shouldThrowUsernameNotFoundExceptionWhenUserDoesNotExist() {
+        // given
+        LoginDto loginDto = new LoginDto();
+        loginDto.setEmail("nonexistent@test.com");
+        loginDto.setPassword("password123");
+
+        given(userRepository.findByEmail(loginDto.getEmail())).willReturn(Optional.empty());
+
+        // when & then
+        assertThrows(UsernameNotFoundException.class, () -> {
+            userService.login(loginDto);
+        });
+
+        verify(authenticationManager, never()).authenticate(any());
+    }
 }
