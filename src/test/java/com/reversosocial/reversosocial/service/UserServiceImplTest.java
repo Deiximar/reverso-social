@@ -21,6 +21,7 @@ import com.reversosocial.bean.entity.ERole;
 import com.reversosocial.bean.entity.Role;
 import com.reversosocial.bean.entity.User;
 import com.reversosocial.config.exception.ExistingEmailException;
+import com.reversosocial.config.exception.ExistingUsernameException;
 import com.reversosocial.config.exception.InvalidCredentialsException;
 import com.reversosocial.config.exception.UsernameNotFoundException;
 import com.reversosocial.layer.repository.RoleRepository;
@@ -165,6 +166,42 @@ public class UserServiceImplTest {
 
   }
 
+  @Test
+  void shouldThrowExceptionWhenUserNameAlreadyExists() {
+    // given
+    User newUser = new User();
+    newUser.setId(3);
+    newUser.setName("user");
+    newUser.setLastname("user");
+    newUser.setEmail("user@gmail.com");
+    newUser.setPassword("password123");
+    newUser.setUsername("user");
+    newUser.setBirthday(LocalDate.of(1995, 5, 5));
+
+    RegisterDto userDto = new RegisterDto();
+    userDto.setName(newUser.getName());
+    userDto.setLastname(newUser.getLastname());
+    userDto.setEmail(newUser.getEmail());
+    userDto.setPassword(newUser.getPassword());
+    userDto.setUsername(newUser.getUsername());
+    userDto.setBirthday(newUser.getBirthday());
+
+    User existingUser = new User();
+    existingUser.setUsername("user");
+
+    given(userRepository.findByUsername(userDto.getUsername())).willReturn(Optional.of(existingUser));
+    String responseMessage = "Este nombre de usuario ya esta en uso.";
+
+    // when & then
+    ExistingUsernameException response = assertThrows(ExistingUsernameException.class, () -> {
+      userService.register(userDto);
+    });
+
+    verify(userRepository, times(0)).save(any(User.class));
+    assertEquals(responseMessage, response.getMessage());
+  }
+
+
   @Test 
   void shouldLoginUserSuccessfully() {
     // given
@@ -223,5 +260,4 @@ public class UserServiceImplTest {
 
         verify(authenticationManager, never()).authenticate(any());
     }
-
 }

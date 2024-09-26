@@ -19,6 +19,7 @@ import com.reversosocial.bean.entity.ERole;
 import com.reversosocial.bean.entity.Role;
 import com.reversosocial.bean.entity.User;
 import com.reversosocial.config.exception.ExistingEmailException;
+import com.reversosocial.config.exception.ExistingUsernameException;
 import com.reversosocial.config.exception.InvalidCredentialsException;
 import com.reversosocial.config.exception.UsernameNotFoundException;
 import com.reversosocial.config.security.jwt.JWTAuthenticationConfig;
@@ -63,7 +64,7 @@ public class UserServiceImpl implements UserService {
       throw new ExistingEmailException("Este correo electronico ya esta en uso.");
     }
     if (userRepository.findByUsername(request.getUsername()).isPresent()) {
-      throw new ExistingEmailException("Este nombre de usuario ya esta en uso.");
+      throw new ExistingUsernameException("Este nombre de usuario ya esta en uso.");
     }
 
     User user = new User();
