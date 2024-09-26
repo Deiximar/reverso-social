@@ -22,10 +22,10 @@ import com.reversosocial.layer.controller.AuthController;
 import com.reversosocial.layer.service.UserService;
 
 public class AuthControllerTest {
-    
-    @Mock 
+
+    @Mock
     private UserService userService;
-    
+
     @InjectMocks
     private AuthController authController;
 
@@ -36,27 +36,27 @@ public class AuthControllerTest {
 
     @Test
     void shouldLoginAUserSuccessfully() {
-        //Given 
+        // Given
         LoginDto loginDto = new LoginDto();
         loginDto.setEmail("test@test.com");
         loginDto.setPassword("password");
 
         AuthResponseDto authResponseDto = new AuthResponseDto("token");
 
-        //When
+        // When
         when(userService.login(loginDto)).thenReturn(authResponseDto);
 
-        //Then
+        // Then
         ResponseEntity<AuthResponseDto> response = authController.login(loginDto);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("token", response.getBody());
+        assertEquals(authResponseDto, response.getBody());
 
     }
 
-    @Test 
-    void shouldRegisterANewUserSuccessfully () {
-        //Given
+    @Test
+    void shouldRegisterANewUserSuccessfully() {
+        // Given
         RegisterDto registerDto = new RegisterDto();
         registerDto.setUsername("Maria07");
         registerDto.setName("Maria");
@@ -69,10 +69,10 @@ public class AuthControllerTest {
 
         String responseMessage = "User registered successfully";
 
-        //When
+        // When
         when(userService.register(registerDto)).thenReturn(responseMessage);
 
-        //then
+        // then
         ResponseEntity<String> response = authController.register(registerDto);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(responseMessage, response.getBody());
