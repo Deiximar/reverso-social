@@ -10,32 +10,31 @@ import lombok.Data;
 @Data
 public class RegisterDto {
 
-    @NotNull(message = "El campo Nombre de Usuario es requerido.")
-    @NotBlank(message = "El campo Nombre de Usuario es requerido.")
+    @NotNull(message = "El campo nombre de usuario es requerido.")
+    @NotBlank(message = "El campo nombre de usuario es requerido.")
     private String username;
 
-    @NotNull(message = "El campo Nombre es requerido.")
-    @NotBlank(message = "El campo Nombre es requerido.")
+    @NotNull(message = "El campo nombre es requerido.")
+    @NotBlank(message = "El campo nombre es requerido.")
     private String name;
 
-    @NotNull(message = "El campo Apellido es requerido.")
-    @NotBlank(message = "El campo Apellido es requerido.")
-
+    @NotNull(message = "El campo apellido es requerido.")
+    @NotBlank(message = "El campo apellido es requerido.")
     private String lastname;
 
-    @NotNull(message = "El campo Fecha de nacimiento es requerido.")
+    @NotNull(message = "El campo fecha de nacimiento es requerido.")
     @Past(message = "La fecha debe ser anterior a la fecha actual.")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birthday;
 
-    @NotNull(message = "El campo Contraseña es requerido.")
-    @NotBlank(message = "El campo Contraseña es requerido.")
-    @Size(min = 8)
+    @Size(min = 8, message = "El campo contraseña debe contener mínimo 8 caracteres.")
+    @NotNull(message = "El campo contraseña es requerido.")
+    @NotBlank(message = "El campo contraseña es requerido.")
     private String password;
 
-    @NotNull(message = "El campo Correo Electrónico es requerido.")
-    @NotBlank(message = "El campo Correo Electrónico es requerido.")
-    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "Correo electrónico inválido. El formato debe ser example@gmail.com")
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "Email inválido. El formato debe ser example@gmail.com")
+    @NotNull(message = "El campo email es requerido.")
+    @NotBlank(message = "El campo email es requerido.")
     private String email;
 
     private Role role;
