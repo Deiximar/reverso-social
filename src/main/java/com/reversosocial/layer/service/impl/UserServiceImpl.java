@@ -2,8 +2,6 @@ package com.reversosocial.layer.service.impl;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -59,7 +57,6 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public String register(RegisterDto request) {
-    System.out.println(request.getBirthday());
     if (userRepository.findByEmail(request.getEmail()).isPresent()) {
       throw new ExistingEmailException("Este correo electronico ya esta en uso.");
     }
@@ -76,17 +73,19 @@ public class UserServiceImpl implements UserService {
     user.setPassword(passwordEncoder.encode(request.getPassword()));
 
     int age = Period.between(request.getBirthday(), LocalDate.now()).getYears();
-    Set<Role> roles = new HashSet<>();
-    if (age > 50) {
-      Role femseniorRole = roleRepository.findByRole(ERole.ROLE_FEMSENIOR)
-          .orElseThrow(() -> new RuntimeException("Error: Rol FEMSENIOR no encontrado."));
-      roles.add(femseniorRole);
-    }
-    Role userRole = roleRepository.findByRole(ERole.ROLE_USER)
-        .orElseThrow(() -> new RuntimeException("Error: Rol USER no encontrado."));
-    roles.add(userRole);
 
-    user.setRoles(roles);
+    if (age > 50) {
+      Role femseniorRole = roleRepository.findByRole(ERole.FEMSENIOR)
+          .orElseThrow(() -> new RuntimeException("Error: Rol FEMSENIOR no encontrado."));
+
+      user.setRole(femseniorRole);
+    } else {
+      Role userRole = roleRepository.findByRole(ERole.USER)
+          .orElseThrow(() -> new RuntimeException("Error: Rol USER no encontrado."));
+
+      user.setRole(userRole);
+    }
+
     userRepository.save(user);
     return "Usuario registrado exitosamente";
   }

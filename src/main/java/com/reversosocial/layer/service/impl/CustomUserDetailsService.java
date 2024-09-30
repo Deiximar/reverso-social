@@ -13,14 +13,16 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
-    private final UserRepository userRepository;
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-      User user = userRepository.findByEmail(username)
-          .orElseThrow(() -> new UsernameNotFoundException("User not found with username:" + username));
-      return User.builder()
-          .username(user.getEmail())
-          .password(user.getPassword())
-          .build();
-    }
+  private final UserRepository userRepository;
+
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    User user = userRepository.findByEmail(username)
+        .orElseThrow(() -> new UsernameNotFoundException("User not found with username:" + username));
+    return org.springframework.security.core.userdetails.User.builder()
+        .username(user.getEmail())
+        .password(user.getPassword())
+        .roles(user.getRole().getRole().toString())
+        .build();
   }
+}
