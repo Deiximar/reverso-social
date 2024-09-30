@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ServiceDto {
+public class ServiceBusinessDto {
     private Integer id;
 
     @NotNull(message =  "El campo nombre de titulo es requerido.")

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.reversosocial.bean.dto.ServiceDto;
+import com.reversosocial.bean.dto.ServiceBusinessDto;
 import com.reversosocial.layer.service.impl.ServiceService;
 
 import jakarta.validation.Valid;
@@ -20,9 +20,9 @@ import lombok.RequiredArgsConstructor;
     private final ServiceService serviceService; 
 
     @PostMapping
-    public ResponseEntity<ServiceDto> createService (@RequestBody @Valid ServiceDto serviceDto) {
-   ServiceDto addService = serviceService.createService(serviceDto);
-   return new ResponseEntity<ServiceDto>(addService, HttpStatus.CREATED);
+    public ResponseEntity<ServiceBusinessDto> createService (@RequestBody @Valid ServiceBusinessDto serviceDto) {
+   ServiceBusinessDto addService = serviceService.createService(serviceDto);
+   return new ResponseEntity<ServiceBusinessDto>(addService, HttpStatus.CREATED);
     
 }
 }

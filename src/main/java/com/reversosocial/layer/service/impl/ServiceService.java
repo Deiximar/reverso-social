@@ -1,9 +1,9 @@
 package com.reversosocial.layer.service.impl;
 
-import com.reversosocial.bean.dto.ServiceDto;
+import com.reversosocial.bean.dto.ServiceBusinessDto;
 
 public interface ServiceService {
 
-ServiceDto createService(ServiceDto service);
+ServiceBusinessDto createService(ServiceBusinessDto service);
     
 }

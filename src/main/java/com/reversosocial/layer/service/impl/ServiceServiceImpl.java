@@ -2,7 +2,7 @@ package com.reversosocial.layer.service.impl;
 
 import org.modelmapper.ModelMapper;
 
-import com.reversosocial.bean.dto.ServiceDto;
+import com.reversosocial.bean.dto.ServiceBusinessDto;
 import com.reversosocial.bean.entity.Sector;
 import com.reversosocial.bean.entity.ServiceBusiness;
 import com.reversosocial.bean.entity.User;
@@ -25,7 +25,7 @@ public class ServiceServiceImpl implements ServiceService {
     private final ModelMapper modelMapper;
 
     @Override
-    public ServiceDto createService(ServiceDto serviceDto) {
+    public ServiceBusinessDto createService(ServiceBusinessDto serviceDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName();
         User user = userRepository.findByEmail(userEmail)
@@ -36,6 +36,6 @@ public class ServiceServiceImpl implements ServiceService {
         serviceBusiness.setUser(user);
         serviceBusiness.setSector(sector);
         ServiceBusiness savedService = serviceRepository.save(serviceBusiness);
-        return modelMapper.map(savedService, ServiceDto.class);
+        return modelMapper.map(savedService, ServiceBusinessDto.class);
     }
 }

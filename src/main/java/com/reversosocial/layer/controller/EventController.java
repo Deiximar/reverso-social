@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 
-/*@RestController
+@RestController
 @RequestMapping("/api/events")
 @RequiredArgsConstructor
 public class EventController {
@@ -27,4 +27,4 @@ public class EventController {
     return new ResponseEntity<EventDto>(createdRoutine, HttpStatus.CREATED);
   }
 
-}*/
+}
