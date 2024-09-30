@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "services")
-public class Service {
+public class ServiceBusiness {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int Id;
@@ -32,7 +32,6 @@ public class Service {
     private String description;
     @Column(nullable = false)
     private String email;
-    @Column(nullable = false)
     private String phone_number;
 
     @ManyToOne(fetch = FetchType.EAGER)
