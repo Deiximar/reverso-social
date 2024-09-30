@@ -79,4 +79,13 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(errorObject, HttpStatus.UNAUTHORIZED);
   }
 
+  @ExceptionHandler(ResourceNotFountException.class)
+  public ResponseEntity<ErrorObject> handleResourceNotFountException(ResourceNotFountException ex) {
+    ErrorObject errorObject = new ErrorObject();
+    errorObject.setStatusCode(HttpStatus.NOT_FOUND.value());
+    errorObject.setMessage(ex.getMessage());
+    errorObject.setTimestamp(new Date());
+    return new ResponseEntity<>(errorObject, HttpStatus.NOT_FOUND);
+  }
+
 }
