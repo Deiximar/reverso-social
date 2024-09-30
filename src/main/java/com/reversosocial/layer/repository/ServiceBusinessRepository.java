@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.reversosocial.bean.entity.ServiceBusiness;
 
 @Repository
-public interface ServiceRepository extends JpaRepository <ServiceBusiness, Integer> {
+public interface ServiceBusinessRepository extends JpaRepository <ServiceBusiness, Integer> {
 
     
 }

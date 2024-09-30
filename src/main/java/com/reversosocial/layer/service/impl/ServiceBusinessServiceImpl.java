@@ -9,7 +9,7 @@ import com.reversosocial.bean.entity.User;
 import com.reversosocial.config.exception.ResourceNotFountException;
 import com.reversosocial.config.exception.UsernameNotFoundException;
 import com.reversosocial.layer.repository.SectorRepository;
-import com.reversosocial.layer.repository.ServiceRepository;
+import com.reversosocial.layer.repository.ServiceBusinessRepository;
 import com.reversosocial.layer.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -18,8 +18,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ServiceServiceImpl implements ServiceService {
-    private final ServiceRepository serviceRepository;
+public class ServiceBusinessServiceImpl implements ServiceBusinessService {
+    private final ServiceBusinessRepository serviceRepository;
     private final UserRepository userRepository;
     private final SectorRepository sectorRepository;
     private final ModelMapper modelMapper;

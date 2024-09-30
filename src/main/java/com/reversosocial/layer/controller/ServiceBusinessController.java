@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.reversosocial.bean.dto.ServiceBusinessDto;
-import com.reversosocial.layer.service.impl.ServiceService;
+import com.reversosocial.layer.service.impl.ServiceBusinessService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +16,8 @@ import lombok.RequiredArgsConstructor;
 @RestController
     @RequestMapping("/api/services/")
     @RequiredArgsConstructor
-    public class ServiceController {
-    private final ServiceService serviceService; 
+    public class ServiceBusinessController {
+    private final ServiceBusinessService serviceService; 
 
     @PostMapping
     public ResponseEntity<ServiceBusinessDto> createService (@RequestBody @Valid ServiceBusinessDto serviceDto) {
