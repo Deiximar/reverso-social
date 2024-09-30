@@ -23,21 +23,21 @@ public class DataLoader implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws Exception {
-    if (roleRepository.findByRole(ERole.ROLE_ADMIN).isEmpty()) {
+    if (roleRepository.findByRole(ERole.ADMIN).isEmpty()) {
       Role adminRole = new Role();
-      adminRole.setRole(ERole.ROLE_ADMIN);
+      adminRole.setRole(ERole.ADMIN);
       roleRepository.save(adminRole);
     }
 
-    if (roleRepository.findByRole(ERole.ROLE_USER).isEmpty()) {
+    if (roleRepository.findByRole(ERole.USER).isEmpty()) {
       Role userRole = new Role();
-      userRole.setRole(ERole.ROLE_USER);
+      userRole.setRole(ERole.USER);
       roleRepository.save(userRole);
     }
 
-    if (roleRepository.findByRole(ERole.ROLE_FEMSENIOR).isEmpty()) {
+    if (roleRepository.findByRole(ERole.FEMSENIOR).isEmpty()) {
       Role femseniorRole = new Role();
-      femseniorRole.setRole(ERole.ROLE_FEMSENIOR);
+      femseniorRole.setRole(ERole.FEMSENIOR);
       roleRepository.save(femseniorRole);
     }
   }

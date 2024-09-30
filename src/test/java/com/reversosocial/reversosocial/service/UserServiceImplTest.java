@@ -112,8 +112,8 @@ public class UserServiceImplTest {
     given(passwordEncoder.encode(userDto.getPassword())).willReturn("encodedPassword");
 
     Role userRole = new Role();
-    userRole.setRole(ERole.ROLE_USER);
-    given(roleRepository.findByRole(ERole.ROLE_USER)).willReturn(Optional.of(userRole));
+    userRole.setRole(ERole.USER);
+    given(roleRepository.findByRole(ERole.USER)).willReturn(Optional.of(userRole));
 
     String responseMessage = "Usuario registrado exitosamente";
 
@@ -126,7 +126,7 @@ public class UserServiceImplTest {
     // then
     assertEquals(responseMessage, response);
     assertEquals("encodedPassword", savedUser.getPassword());
-    assertEquals(userRole, savedUser.getRoles().iterator().next());
+    assertEquals(userRole, savedUser.getRole());
     assertEquals(newUser.getEmail(), savedUser.getEmail());
   }
 
@@ -201,8 +201,7 @@ public class UserServiceImplTest {
     assertEquals(responseMessage, response.getMessage());
   }
 
-
-  @Test 
+  @Test
   void shouldLoginUserSuccessfully() {
     // given
     LoginDto request = new LoginDto();
@@ -223,41 +222,41 @@ public class UserServiceImplTest {
   }
 
   @Test
-    void shouldThrowInvalidCredentialsExceptionWhenBadCredentials() {
-        // given
-        LoginDto LoginDto = new LoginDto();
-        LoginDto.setEmail("test@test.com");
-        LoginDto.setPassword("wrongPassword");
+  void shouldThrowInvalidCredentialsExceptionWhenBadCredentials() {
+    // given
+    LoginDto LoginDto = new LoginDto();
+    LoginDto.setEmail("test@test.com");
+    LoginDto.setPassword("wrongPassword");
 
-        User user = new User();
-        user.setEmail("test@test.com");
+    User user = new User();
+    user.setEmail("test@test.com");
 
-        given(userRepository.findByEmail(LoginDto.getEmail())).willReturn(Optional.of(user));
+    given(userRepository.findByEmail(LoginDto.getEmail())).willReturn(Optional.of(user));
 
-        doThrow(new BadCredentialsException("Invalid password"))
-            .when(authenticationManager)
-            .authenticate(any(UsernamePasswordAuthenticationToken.class));
+    doThrow(new BadCredentialsException("Invalid password"))
+        .when(authenticationManager)
+        .authenticate(any(UsernamePasswordAuthenticationToken.class));
 
-        // when & then
-        assertThrows(InvalidCredentialsException.class, () -> {
-            userService.login(LoginDto);
-        });
-    }
+    // when & then
+    assertThrows(InvalidCredentialsException.class, () -> {
+      userService.login(LoginDto);
+    });
+  }
 
-    @Test
-    void shouldThrowUsernameNotFoundExceptionWhenUserDoesNotExist() {
-        // given
-        LoginDto loginDto = new LoginDto();
-        loginDto.setEmail("nonexistent@test.com");
-        loginDto.setPassword("password123");
+  @Test
+  void shouldThrowUsernameNotFoundExceptionWhenUserDoesNotExist() {
+    // given
+    LoginDto loginDto = new LoginDto();
+    loginDto.setEmail("nonexistent@test.com");
+    loginDto.setPassword("password123");
 
-        given(userRepository.findByEmail(loginDto.getEmail())).willReturn(Optional.empty());
+    given(userRepository.findByEmail(loginDto.getEmail())).willReturn(Optional.empty());
 
-        // when & then
-        assertThrows(UsernameNotFoundException.class, () -> {
-            userService.login(loginDto);
-        });
+    // when & then
+    assertThrows(UsernameNotFoundException.class, () -> {
+      userService.login(loginDto);
+    });
 
-        verify(authenticationManager, never()).authenticate(any());
-    }
+    verify(authenticationManager, never()).authenticate(any());
+  }
 }
