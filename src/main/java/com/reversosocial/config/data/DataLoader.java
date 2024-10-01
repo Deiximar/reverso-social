@@ -7,15 +7,15 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.reversosocial.bean.entity.EPermission;
-import com.reversosocial.bean.entity.ERole;
-import com.reversosocial.bean.entity.Permission;
-import com.reversosocial.bean.entity.Role;
-import com.reversosocial.bean.entity.Sector;
-import com.reversosocial.layer.repository.PermissionRepository;
-import com.reversosocial.layer.repository.RoleRepository;
-import com.reversosocial.layer.repository.SectorRepository;
-import com.reversosocial.layer.repository.UserRepository;
+import com.reversosocial.models.entity.EPermission;
+import com.reversosocial.models.entity.ERole;
+import com.reversosocial.models.entity.Permission;
+import com.reversosocial.models.entity.Role;
+import com.reversosocial.models.entity.Sector;
+import com.reversosocial.repository.PermissionRepository;
+import com.reversosocial.repository.RoleRepository;
+import com.reversosocial.repository.SectorRepository;
+import com.reversosocial.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 

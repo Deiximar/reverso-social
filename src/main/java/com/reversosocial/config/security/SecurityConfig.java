@@ -20,7 +20,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.reversosocial.config.security.jwt.JWTAuthenticationFilter;
-import com.reversosocial.layer.service.impl.CustomUserDetailsService;
+import com.reversosocial.service.impl.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
