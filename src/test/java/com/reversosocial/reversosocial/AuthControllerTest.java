@@ -15,11 +15,11 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.reversosocial.bean.dto.AuthResponseDto;
-import com.reversosocial.bean.dto.LoginDto;
-import com.reversosocial.bean.dto.RegisterDto;
-import com.reversosocial.layer.controller.AuthController;
-import com.reversosocial.layer.service.UserService;
+import com.reversosocial.controller.AuthController;
+import com.reversosocial.models.dto.AuthResponseDto;
+import com.reversosocial.models.dto.LoginDto;
+import com.reversosocial.models.dto.RegisterDto;
+import com.reversosocial.service.UserService;
 
 public class AuthControllerTest {
 
