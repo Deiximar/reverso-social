@@ -8,4 +8,6 @@ public interface EventService {
   EventDto createEvent(EventDto event);
 
   List<EventDto> getAllEvents();
+
+  String deleteEvent(Integer eventId);
 }

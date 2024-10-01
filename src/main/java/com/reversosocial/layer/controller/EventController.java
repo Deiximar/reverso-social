@@ -16,7 +16,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api/events")
@@ -39,4 +41,9 @@ public class EventController {
     return new ResponseEntity<>(eventService.getAllEvents(), HttpStatus.OK);
   }
 
+  @DeleteMapping("/{id}")
+  @PreAuthorize("hasAuthority('DELETE')")
+  public ResponseEntity<String> deleteEvent(@PathVariable Integer id) {
+    return new ResponseEntity<>(eventService.deleteEvent(id), HttpStatus.OK);
+  }
 }
