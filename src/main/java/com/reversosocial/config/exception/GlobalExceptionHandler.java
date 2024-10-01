@@ -7,6 +7,8 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -86,6 +88,24 @@ public class GlobalExceptionHandler {
     errorObject.setMessage(ex.getMessage());
     errorObject.setTimestamp(new Date());
     return new ResponseEntity<>(errorObject, HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(AccessDeniedException.class)
+  public ResponseEntity<ErrorObject> handleAccessDeniedException(AccessDeniedException ex) {
+    ErrorObject errorObject = new ErrorObject();
+    errorObject.setStatusCode(HttpStatus.FORBIDDEN.value());
+    errorObject.setMessage("No tienes permiso para acceder a este recurso.");
+    errorObject.setTimestamp(new Date());
+    return new ResponseEntity<>(errorObject, HttpStatus.FORBIDDEN);
+  }
+
+  @ExceptionHandler(AuthenticationException.class)
+  public ResponseEntity<ErrorObject> handleAuthenticationException(AuthenticationException ex) {
+    ErrorObject errorObject = new ErrorObject();
+    errorObject.setStatusCode(HttpStatus.UNAUTHORIZED.value());
+    errorObject.setMessage("No estás autenticado. Por favor, inicia sesión.");
+    errorObject.setTimestamp(new Date());
+    return new ResponseEntity<>(errorObject, HttpStatus.UNAUTHORIZED);
   }
 
 }
