@@ -82,8 +82,6 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(ResourceNotFoundException.class)
-  feature/serviceDelete
-
   public ResponseEntity<ErrorObject> handleResourceNotFoundException(ResourceNotFoundException ex) {
 
     ErrorObject errorObject = new ErrorObject();
