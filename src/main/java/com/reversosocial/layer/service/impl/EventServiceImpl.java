@@ -96,6 +96,13 @@ public class EventServiceImpl implements EventService {
     return mapEventToDto(updatedEvent);
   }
 
+  @Override
+  public EventDto getEventById(Integer eventId) {
+    Event event = eventRepository.findById(eventId)
+        .orElseThrow(() -> new ResourceNotFoundException("Evento no encontrado."));
+    return mapEventToDto(event);
+  }
+
   private Event mapEventToEntity(EventDto eventDto) {
     Event event = modelMapper.map(eventDto, Event.class);
     return event;
