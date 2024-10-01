@@ -16,6 +16,7 @@ import com.reversosocial.layer.repository.SectorRepository;
 import com.reversosocial.layer.repository.UserRepository;
 import com.reversosocial.layer.service.EventService;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -57,6 +58,21 @@ public class EventServiceImpl implements EventService {
     return events.stream().map(this::mapEventToDto).toList();
   }
 
+  @Override
+  public String deleteEvent(Integer eventId) {
+    Event event = eventRepository.findById(eventId)
+        .orElseThrow(() -> new ResourceNotFountException("Evento no encontrado"));
+    System.out.println(event.getUser().getEmail());
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String userEmail = authentication.getName();
+
+    if (!isOwnerOrAdmin(event, userEmail, authentication)) {
+      throw new AccessDeniedException("No tienes permiso para eliminar este evento.");
+    }
+    eventRepository.delete(event);
+    return "El evento ha sido eliminado exitosamente.";
+  }
+
   private Event mapEventToEntity(EventDto eventDto) {
     Event event = modelMapper.map(eventDto, Event.class);
     return event;
@@ -65,5 +81,11 @@ public class EventServiceImpl implements EventService {
   private EventDto mapEventToDto(Event event) {
     EventDto eventDto = modelMapper.map(event, EventDto.class);
     return eventDto;
+  }
+
+  private boolean isOwnerOrAdmin(Event event, String userEmail, Authentication authentication) {
+    boolean isAdmin = authentication.getAuthorities().stream()
+        .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
+    return event.getUser().getEmail().equals(userEmail) || isAdmin;
   }
 }
