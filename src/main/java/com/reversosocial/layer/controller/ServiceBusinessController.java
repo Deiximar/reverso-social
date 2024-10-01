@@ -2,6 +2,8 @@ package com.reversosocial.layer.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,12 +19,20 @@ import lombok.RequiredArgsConstructor;
     @RequestMapping("/api/services/")
     @RequiredArgsConstructor
     public class ServiceBusinessController {
-    private final ServiceBusinessService serviceService; 
+    private final ServiceBusinessService serviceBusinessService; 
+   
 
     @PostMapping
-    public ResponseEntity<ServiceBusinessDto> createService (@RequestBody @Valid ServiceBusinessDto serviceDto) {
-   ServiceBusinessDto addService = serviceService.createService(serviceDto);
+    public ResponseEntity<ServiceBusinessDto> createService (@RequestBody @Valid ServiceBusinessDto serviceBusinessDto) {
+   ServiceBusinessDto addService = serviceBusinessService.createService(serviceBusinessDto);
    return new ResponseEntity<ServiceBusinessDto>(addService, HttpStatus.CREATED);
     
 }
+
+@DeleteMapping("/{id}")
+public ResponseEntity<String> deleteService(@PathVariable int id) {
+    serviceBusinessService.deleteService(id);
+    return ResponseEntity.ok("El servicio ha sido eliminado correctamente.");
+}
+
 }

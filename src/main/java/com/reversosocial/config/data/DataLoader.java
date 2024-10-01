@@ -12,36 +12,34 @@ import com.reversosocial.bean.entity.ERole;
 import com.reversosocial.bean.entity.Permission;
 import com.reversosocial.bean.entity.Role;
 import com.reversosocial.bean.entity.Sector;
+import com.reversosocial.layer.repository.PermissionRepository;
 import com.reversosocial.layer.repository.RoleRepository;
 import com.reversosocial.layer.repository.SectorRepository;
 import com.reversosocial.layer.repository.UserRepository;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Configuration
 public class DataLoader {
 
-  private RoleRepository roleRepository;
-
-  public DataLoader(RoleRepository roleRepository) {
-    this.roleRepository = roleRepository;
-  }
+  private final RoleRepository roleRepository;
+  private final PermissionRepository permissionRepository;
 
   @Bean
   CommandLineRunner initDatabaseRoles(UserRepository repository) {
     return args -> {
-      Permission createPermission = Permission.builder()
-          .permission(EPermission.CREATE).build();
 
-      Permission readPermission = Permission.builder()
-          .permission(EPermission.READ).build();
-
-      Permission deletePermission = Permission.builder()
-          .permission(EPermission.DELETE).build();
-
-      Permission updatePermission = Permission.builder()
-          .permission(EPermission.UPDATE).build();
-
-      Permission participatePermission = Permission.builder()
-          .permission(EPermission.PARTICIPATE).build();
+      Permission createPermission = permissionRepository.findByPermission(EPermission.CREATE)
+          .orElseGet(() -> permissionRepository.save(Permission.builder().permission(EPermission.CREATE).build()));
+      Permission readPermission = permissionRepository.findByPermission(EPermission.READ)
+          .orElseGet(() -> permissionRepository.save(Permission.builder().permission(EPermission.READ).build()));
+      Permission deletePermission = permissionRepository.findByPermission(EPermission.DELETE)
+          .orElseGet(() -> permissionRepository.save(Permission.builder().permission(EPermission.DELETE).build()));
+      Permission updatePermission = permissionRepository.findByPermission(EPermission.UPDATE)
+          .orElseGet(() -> permissionRepository.save(Permission.builder().permission(EPermission.UPDATE).build()));
+      Permission participatePermission = permissionRepository.findByPermission(EPermission.PARTICIPATE)
+          .orElseGet(() -> permissionRepository.save(Permission.builder().permission(EPermission.PARTICIPATE).build()));
 
       Role adminRole = Role.builder()
           .role(ERole.ADMIN)
@@ -56,8 +54,7 @@ public class DataLoader {
 
       Role userRole = Role.builder()
           .role(ERole.USER)
-          .permissionList(
-              Set.of(readPermission, participatePermission))
+          .permissionList(Set.of(readPermission, participatePermission))
           .build();
 
       if (roleRepository.findByRole(ERole.ADMIN).isEmpty()) {

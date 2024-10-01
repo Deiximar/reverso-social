@@ -7,7 +7,7 @@ import com.reversosocial.bean.dto.EventDto;
 import com.reversosocial.bean.entity.Event;
 import com.reversosocial.bean.entity.Sector;
 import com.reversosocial.bean.entity.User;
-import com.reversosocial.config.exception.ResourceNotFountException;
+import com.reversosocial.config.exception.ResourceNotFoundException;
 import com.reversosocial.config.exception.UsernameNotFoundException;
 import com.reversosocial.layer.repository.EventRepository;
 import com.reversosocial.layer.repository.SectorRepository;
@@ -36,7 +36,7 @@ public class EventServiceImpl implements EventService {
     User user = userRepository.findByEmail(userEmail)
         .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado."));
     Sector sector = sectorRepository.findBySector(eventDto.getSector())
-        .orElseThrow(() -> new ResourceNotFountException("Sector no encontrado"));
+        .orElseThrow(() -> new ResourceNotFoundException("Sector no encontrado"));
 
     Event event = mapEventToEntity(eventDto);
     event.setUser(user);
