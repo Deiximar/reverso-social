@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-public class User implements UserDetails {
+public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
@@ -52,13 +52,4 @@ public class User implements UserDetails {
   @OneToMany(mappedBy = "user")
   private List<Event> events;
 
-  @Override
-  public Collection<? extends GrantedAuthority> getAuthorities() {
-    return List.of(new SimpleGrantedAuthority("USER"));
-  }
-
-  @Override
-  public String getUsername() {
-    return this.email;
-  }
 }
