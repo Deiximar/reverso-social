@@ -9,7 +9,7 @@ import com.reversosocial.bean.dto.EventDto;
 import com.reversosocial.bean.entity.Event;
 import com.reversosocial.bean.entity.Sector;
 import com.reversosocial.bean.entity.User;
-import com.reversosocial.config.exception.ResourceNotFountException;
+import com.reversosocial.config.exception.ResourceNotFoundException;
 import com.reversosocial.config.exception.UsernameNotFoundException;
 import com.reversosocial.layer.repository.EventRepository;
 import com.reversosocial.layer.repository.SectorRepository;
@@ -39,7 +39,7 @@ public class EventServiceImpl implements EventService {
     User user = userRepository.findByEmail(userEmail)
         .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado."));
     Sector sector = sectorRepository.findBySector(eventDto.getSector())
-        .orElseThrow(() -> new ResourceNotFountException("Sector no encontrado"));
+        .orElseThrow(() -> new ResourceNotFoundException("Sector no encontrado"));
 
     Event event = mapEventToEntity(eventDto);
     event.setUser(user);
@@ -53,7 +53,7 @@ public class EventServiceImpl implements EventService {
     List<Event> events = eventRepository.findAll();
 
     if (events.isEmpty()) {
-      throw new ResourceNotFountException("No hay eventos disponibles");
+      throw new ResourceNotFoundException("No hay eventos disponibles");
     }
     return events.stream().map(this::mapEventToDto).toList();
   }
@@ -61,8 +61,8 @@ public class EventServiceImpl implements EventService {
   @Override
   public String deleteEvent(Integer eventId) {
     Event event = eventRepository.findById(eventId)
-        .orElseThrow(() -> new ResourceNotFountException("Evento no encontrado"));
-    System.out.println(event.getUser().getEmail());
+        .orElseThrow(() -> new ResourceNotFoundException("Evento no encontrado"));
+
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String userEmail = authentication.getName();
 
@@ -71,6 +71,29 @@ public class EventServiceImpl implements EventService {
     }
     eventRepository.delete(event);
     return "El evento ha sido eliminado exitosamente.";
+  }
+
+  @Override
+  public EventDto updateEvent(Integer eventId, EventDto eventDto) {
+    Event event = eventRepository.findById(eventId)
+        .orElseThrow(() -> new ResourceNotFoundException("Evento no encontrado"));
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String userEmail = authentication.getName();
+    if (!isOwnerOrAdmin(event, userEmail, authentication)) {
+      throw new AccessDeniedException("No tienes permiso para modificar este evento.");
+    }
+    Sector sector = sectorRepository.findBySector(eventDto.getSector())
+        .orElseThrow(() -> new ResourceNotFoundException("Sector no encontrado."));
+    event.setTitle(eventDto.getTitle());
+    event.setDate(eventDto.getDate());
+    event.setTime(eventDto.getTime());
+    event.setModality(eventDto.getModality());
+    event.setLocation(eventDto.getLocation());
+    event.setMaxParticipants(eventDto.getMaxParticipants());
+    event.setSector(sector);
+    Event updatedEvent = eventRepository.save(event);
+    return mapEventToDto(updatedEvent);
   }
 
   private Event mapEventToEntity(EventDto eventDto) {

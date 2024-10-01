@@ -10,4 +10,6 @@ public interface EventService {
   List<EventDto> getAllEvents();
 
   String deleteEvent(Integer eventId);
+
+  EventDto updateEvent(Integer eventId, EventDto eventDto);
 }
