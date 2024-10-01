@@ -82,7 +82,10 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(ResourceNotFoundException.class)
+  feature/serviceDelete
+
   public ResponseEntity<ErrorObject> handleResourceNotFoundException(ResourceNotFoundException ex) {
+
     ErrorObject errorObject = new ErrorObject();
     errorObject.setStatusCode(HttpStatus.NOT_FOUND.value());
     errorObject.setMessage(ex.getMessage());
