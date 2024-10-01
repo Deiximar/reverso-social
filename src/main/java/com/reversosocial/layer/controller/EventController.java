@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/api/events")
@@ -45,5 +46,11 @@ public class EventController {
   @PreAuthorize("hasAuthority('DELETE')")
   public ResponseEntity<String> deleteEvent(@PathVariable Integer id) {
     return new ResponseEntity<>(eventService.deleteEvent(id), HttpStatus.OK);
+  }
+
+  @PutMapping("/{id}")
+  @PreAuthorize("hasAuthority('UPDATE')")
+  public ResponseEntity<EventDto> updateEvent(@PathVariable Integer id, @RequestBody EventDto eventDto) {
+    return new ResponseEntity<>(eventService.updateEvent(id, eventDto), HttpStatus.OK);
   }
 }
