@@ -12,4 +12,6 @@ public interface EventService {
   String deleteEvent(Integer eventId);
 
   EventDto updateEvent(Integer eventId, EventDto eventDto);
+
+  EventDto getEventById(Integer eventId);
 }

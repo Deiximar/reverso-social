@@ -53,4 +53,10 @@ public class EventController {
   public ResponseEntity<EventDto> updateEvent(@PathVariable Integer id, @RequestBody EventDto eventDto) {
     return new ResponseEntity<>(eventService.updateEvent(id, eventDto), HttpStatus.OK);
   }
+
+  @GetMapping("/{id}")
+  @PreAuthorize("permitAll()")
+  public ResponseEntity<EventDto> getEventById(@PathVariable Integer id) {
+    return new ResponseEntity<>(eventService.getEventById(id), HttpStatus.OK);
+  }
 }
