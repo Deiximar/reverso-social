@@ -1,5 +1,7 @@
 package com.reversosocial.layer.service.impl;
 
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +45,16 @@ public class EventServiceImpl implements EventService {
     event.setSector(sector);
     Event createdEvent = eventRepository.save(event);
     return mapEventToDto(createdEvent);
+  }
+
+  @Override
+  public List<EventDto> getAllEvents() {
+    List<Event> events = eventRepository.findAll();
+
+    if (events.isEmpty()) {
+      throw new ResourceNotFountException("No hay eventos disponibles");
+    }
+    return events.stream().map(this::mapEventToDto).toList();
   }
 
   private Event mapEventToEntity(EventDto eventDto) {
