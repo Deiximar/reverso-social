@@ -41,8 +41,7 @@ public class EventDto {
   private String location;
 
   @NotNull(message = "El campo número de participantes es requerido.")
-  @NotBlank(message = "El campo número de participantes es requerido.")
-  private String maxParticipants;
+  private Integer maxParticipants;
 
   @NotNull(message = "El campo sector es requerido.")
   private String sector;
