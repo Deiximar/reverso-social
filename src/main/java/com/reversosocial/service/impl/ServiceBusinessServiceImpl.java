@@ -1,5 +1,7 @@
 package com.reversosocial.service.impl;
 
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 
 import com.reversosocial.config.exception.ResourceNotFoundException;
@@ -12,7 +14,6 @@ import com.reversosocial.repository.SectorRepository;
 import com.reversosocial.repository.ServiceBusinessRepository;
 import com.reversosocial.repository.UserRepository;
 import com.reversosocial.service.ServiceBusinessService;
-
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.access.AccessDeniedException;
@@ -23,7 +24,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ServiceBusinessServiceImpl implements ServiceBusinessService {
-    private final ServiceBusinessRepository serviceRepository;
+    private final ServiceBusinessRepository serviceBusinessRepository;
     private final UserRepository userRepository;
     private final SectorRepository sectorRepository;
     private final ModelMapper modelMapper;
@@ -39,23 +40,72 @@ public class ServiceBusinessServiceImpl implements ServiceBusinessService {
         ServiceBusiness serviceBusiness = modelMapper.map(serviceDto, ServiceBusiness.class);
         serviceBusiness.setUser(user);
         serviceBusiness.setSector(sector);
-        ServiceBusiness savedService = serviceRepository.save(serviceBusiness);
+        ServiceBusiness savedService = serviceBusinessRepository.save(serviceBusiness);
         return modelMapper.map(savedService, ServiceBusinessDto.class);
     }
 
     @Override
-    public void deleteService(int id) {
+    public String deleteService(Integer serviceId) {
+
+        ServiceBusiness serviceBusiness = serviceBusinessRepository.findById(serviceId)
+                .orElseThrow(() -> new UsernameNotFoundException("Servicio no encontrado."));
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName();
-        User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado."));
-        ServiceBusiness serviceRemove = serviceRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Servicio no encontrado con el id: " + id));
-        if (!serviceRemove.getUser().equals(user)) {
+        if (!isOwnerOrAdmin(serviceBusiness, userEmail, authentication)) {
             throw new AccessDeniedException("No tienes permisos para eliminar este servicio.");
         }
 
-        serviceRepository.delete(serviceRemove);
+        serviceBusinessRepository.delete(serviceBusiness);
+        return "El servicio ha sido eliminado existosamente";
+    }
+
+    @Override
+    public ServiceBusinessDto updateService(Integer serviceBusinessId, ServiceBusinessDto serviceBusinessDto) {
+        ServiceBusiness serviceBusiness = serviceBusinessRepository.findById(serviceBusinessId)
+                .orElseThrow(() -> new ResourceNotFoundException("Servicio no encontrado"));
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+        if (!isOwnerOrAdmin(serviceBusiness, userEmail, authentication)) {
+            throw new AccessDeniedException("No tienes permiso para modificar este servicio.");
+        }
+        Sector sector = sectorRepository.findBySector(serviceBusinessDto.getSector())
+                .orElseThrow(() -> new ResourceNotFoundException("Sector no encontrado."));
+        serviceBusiness.setTitle(serviceBusinessDto.getTitle());
+        serviceBusiness.setType(serviceBusinessDto.getType());
+        serviceBusiness.setEmail(serviceBusinessDto.getEmail());
+        serviceBusiness.setDescription(serviceBusinessDto.getDescription());
+        serviceBusiness.setPhone_number(serviceBusinessDto.getPhone_number());
+        serviceBusiness.setSector(sector);
+        ServiceBusiness updatedService = serviceBusinessRepository.save(serviceBusiness);
+        return modelMapper.map(updatedService, ServiceBusinessDto.class);
+    }
+
+    @Override
+    public List<ServiceBusinessDto> getAllServices() {
+        List<ServiceBusiness> serviceBusinesses = serviceBusinessRepository.findAll();
+        if (serviceBusinesses.isEmpty()) {
+            throw new ResourceNotFoundException("No hay servicios disponibles");
+        }
+        return serviceBusinesses.stream().map(this::mapServiceToDto).toList();
+    }
+
+    @Override
+    public ServiceBusinessDto getServiceById(Integer serviceId) {
+        ServiceBusiness serviceBusiness = serviceBusinessRepository.findById(serviceId)
+                .orElseThrow(() -> new ResourceNotFoundException("Servicio no encontrado."));
+        return mapServiceToDto(serviceBusiness);
+    }
+
+    private boolean isOwnerOrAdmin(ServiceBusiness serviceBusiness, String userEmail, Authentication authentication) {
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
+        return serviceBusiness.getUser().getEmail().equals(userEmail) || isAdmin;
+    }
+
+    private ServiceBusinessDto mapServiceToDto(ServiceBusiness serviceBusiness) {
+        ServiceBusinessDto serviceBusinessDto = modelMapper.map(serviceBusiness, ServiceBusinessDto.class);
+        return serviceBusinessDto;
     }
 }

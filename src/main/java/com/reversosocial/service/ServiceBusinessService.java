@@ -1,11 +1,18 @@
 package com.reversosocial.service;
 
+import java.util.List;
+
 import com.reversosocial.models.dto.ServiceBusinessDto;
 
 public interface ServiceBusinessService {
 
-  ServiceBusinessDto createService(ServiceBusinessDto service);
+ServiceBusinessDto createService(ServiceBusinessDto service);
 
-  void deleteService(int id);
+String deleteService(Integer id);
 
+ServiceBusinessDto updateService(Integer serviceId, ServiceBusinessDto serviceBusinessDto);
+
+List<ServiceBusinessDto> getAllServices();
+
+ServiceBusinessDto getServiceById(Integer serviceId);
 }
