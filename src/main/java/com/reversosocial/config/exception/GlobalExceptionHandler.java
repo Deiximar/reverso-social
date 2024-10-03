@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public Map<String, ErrorObject> handleRequestException(MethodArgumentNotValidException ex) {
+  public ResponseEntity<Map<String, ErrorObject>> handleRequestException(MethodArgumentNotValidException ex) {
     Map<String, ErrorObject> errors = new HashMap<>();
 
     ex.getBindingResult().getFieldErrors().forEach(error -> {
@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
       errorObject.setTimestamp(new Date());
       errors.put(error.getField(), errorObject);
     });
-    return errors;
+    return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(HttpMessageNotReadableException.class)
