@@ -111,6 +111,7 @@ public class EventServiceImpl implements EventService {
 
   private EventDto mapEventToDto(Event event) {
     EventDto eventDto = modelMapper.map(event, EventDto.class);
+    eventDto.setCreatorEmail(event.getUser().getEmail());
     return eventDto;
   }
 
