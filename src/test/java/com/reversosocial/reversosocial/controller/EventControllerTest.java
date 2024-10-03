@@ -127,6 +127,7 @@ public class EventControllerTest {
 
     Event event1 = Event.builder()
         .title("Evento 1")
+        .description("Descripcion del evento 1")
         .date(LocalDate.of(2024, 12, 10))
         .time(LocalTime.of(14, 0, 0))
         .modality("Online")
@@ -137,6 +138,7 @@ public class EventControllerTest {
         .build();
     Event event2 = Event.builder()
         .title("Evento 2")
+        .description("Descripcion del evento 2")
         .date(LocalDate.of(2024, 12, 12))
         .time(LocalTime.of(14, 0, 0))
         .modality("Online")
@@ -186,6 +188,7 @@ public class EventControllerTest {
   void shouldSaveAnEventSuccesfully() throws Exception {
     EventDto eventDto = EventDto.builder()
         .title("Evento 3")
+        .description("Descripcion del evento 3")
         .date(LocalDate.of(2024, 12, 12))
         .time(LocalTime.of(14, 0, 0))
         .modality("Online")
@@ -212,6 +215,7 @@ public class EventControllerTest {
   void shouldUpdateAnEventSuccesfully() throws Exception {
     EventDto eventDto = EventDto.builder()
         .title("Evento 2")
+        .description("Descripcion del evento 2")
         .date(LocalDate.of(2024, 12, 10))
         .time(LocalTime.of(10, 0, 0))
         .modality("Presencial")

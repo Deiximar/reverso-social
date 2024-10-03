@@ -30,6 +30,8 @@ public class Event {
   @Column(nullable = false)
   private String title;
   @Column(nullable = false)
+  private String description;
+  @Column(nullable = false)
   private LocalDate date;
   @Column(nullable = false)
   private LocalTime time;
