@@ -86,6 +86,7 @@ public class EventServiceImpl implements EventService {
     Sector sector = sectorRepository.findBySector(eventDto.getSector())
         .orElseThrow(() -> new ResourceNotFoundException("Sector no encontrado."));
     event.setTitle(eventDto.getTitle());
+    event.setDescription(eventDto.getDescription());
     event.setDate(eventDto.getDate());
     event.setTime(eventDto.getTime());
     event.setModality(eventDto.getModality());

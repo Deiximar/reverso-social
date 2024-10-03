@@ -20,9 +20,13 @@ import lombok.NoArgsConstructor;
 public class EventDto {
   private Integer id;
 
-  @NotNull(message = "El campo nombre de titulo es requerido.")
-  @NotBlank(message = "El campo nombre de titulo es requerido.")
+  @NotNull(message = "El campo título es requerido.")
+  @NotBlank(message = "El campo título es requerido.")
   private String title;
+
+  @NotNull(message = "El campo descripción es requerido.")
+  @NotBlank(message = "El campo descripción es requerido.")
+  private String description;
 
   @NotNull(message = "El campo fecha es requerido.")
   @Future(message = "La fecha no debe ser anterior a la fecha actual.")
