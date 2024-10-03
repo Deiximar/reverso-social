@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
       authenticationManager
           .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),
               request.getPassword()));
-      String token = jwtAuthenticationConfig.getJWToken(user.getEmail());
+      String token = jwtAuthenticationConfig.getJWToken(user.getEmail(), user.getRole());
       return new AuthResponseDto(token);
     } catch (BadCredentialsException e) {
       throw new InvalidCredentialsException("La contraseña o el correo electronico es incorrecta");
