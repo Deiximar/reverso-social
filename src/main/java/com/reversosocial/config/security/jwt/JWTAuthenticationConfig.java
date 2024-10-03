@@ -11,6 +11,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.reversosocial.models.entity.Role;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -29,8 +31,9 @@ public class JWTAuthenticationConfig {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String getJWToken(String email) {
-        List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("USER");
+    public String getJWToken(String email, Role role) {
+        List<GrantedAuthority> grantedAuthorities = AuthorityUtils
+                .commaSeparatedStringToAuthorityList(role.getRole().toString());
 
         String token = Jwts
                 .builder()

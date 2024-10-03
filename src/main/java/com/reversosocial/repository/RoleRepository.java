@@ -9,4 +9,6 @@ import com.reversosocial.models.entity.Role;
 
 public interface RoleRepository extends JpaRepository<Role, Integer> {
         Optional<Role> findByRole(ERole role);
+
+        Role findRoleByUser(String email);
 }

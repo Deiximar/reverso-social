@@ -212,8 +212,10 @@ public class UserServiceImplTest {
     User user = new User();
     user.setEmail("test@test.com");
     String token = "mockedJwtToken";
+    Role role = Role.builder().id(1).role(ERole.USER).build();
+    given(roleRepository.findRoleByUser(user.getEmail())).willReturn(role);
     given(userRepository.findByEmail(request.getEmail())).willReturn(Optional.of(user));
-    given(jwtAuthenticationConfig.getJWToken(user.getEmail())).willReturn(token);
+    given(jwtAuthenticationConfig.getJWToken(user.getEmail(), role)).willReturn(token);
     Authentication auth = mock(Authentication.class);
     given(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).willReturn(auth);
     // when
