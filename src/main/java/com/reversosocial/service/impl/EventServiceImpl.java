@@ -34,8 +34,12 @@ public class EventServiceImpl implements EventService {
   @Override
   public EventDto createEvent(EventDto eventDto) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    boolean hasPermission = authentication.getAuthorities().stream()
+        .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("CREATE"));
+    if (!hasPermission) {
+      throw new AccessDeniedException("No tienes permiso para crear un evento.");
+    }
     String userEmail = authentication.getName();
-
     User user = userRepository.findByEmail(userEmail)
         .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado."));
     Sector sector = sectorRepository.findBySector(eventDto.getSector())
