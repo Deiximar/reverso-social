@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +24,9 @@ import com.reversosocial.config.exception.UsernameNotFoundException;
 import com.reversosocial.models.dto.AuthResponseDto;
 import com.reversosocial.models.dto.LoginDto;
 import com.reversosocial.models.dto.RegisterDto;
+import com.reversosocial.models.entity.EPermission;
 import com.reversosocial.models.entity.ERole;
+import com.reversosocial.models.entity.Permission;
 import com.reversosocial.models.entity.Role;
 import com.reversosocial.models.entity.User;
 import com.reversosocial.repository.RoleRepository;
@@ -206,16 +210,25 @@ public class UserServiceImplTest {
   @Test
   void shouldLoginUserSuccessfully() {
     // given
+    Set<Permission> permissions = Set.of(Permission.builder().id(1).permission(EPermission.READ).build());
+    Role role = new Role();
+    role.setId(1);
+    role.setRole(ERole.USER);
+    role.setPermissionList(permissions);
+
     LoginDto request = new LoginDto();
     request.setEmail("test@test.com");
     request.setPassword("password123");
     User user = new User();
     user.setEmail("test@test.com");
+    user.setRole(role);
     String token = "mockedJwtToken";
+
     given(userRepository.findByEmail(request.getEmail())).willReturn(Optional.of(user));
-    given(jwtAuthenticationConfig.getJWToken(user.getEmail())).willReturn(token);
+    given(jwtAuthenticationConfig.getJWToken(user.getEmail(), user.getRole())).willReturn(token);
     Authentication auth = mock(Authentication.class);
     given(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).willReturn(auth);
+
     // when
     AuthResponseDto response = userService.login(request);
     // then
