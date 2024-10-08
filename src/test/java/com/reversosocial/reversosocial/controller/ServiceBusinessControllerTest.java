@@ -1,4 +1,4 @@
-package com.reversosocial.reversosocial.service;
+package com.reversosocial.reversosocial.controller;
 
 import java.util.List;
 import javax.sql.DataSource;
@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.util.Set;
 import java.sql.SQLException;
 import java.sql.Connection;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
