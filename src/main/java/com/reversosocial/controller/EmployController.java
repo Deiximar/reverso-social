@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.reversosocial.models.dto.EmployDto;
 import com.reversosocial.models.entity.Employ;
 import com.reversosocial.service.EmployService;
 
@@ -24,25 +27,32 @@ public class EmployController {
     private EmployService employService;
 
     @GetMapping
-    public List<Employ> getAllEmploys() {
-        return employService.getAllEmploys();
-    }
+    public List<EmployDto> getAllEmploys() {
+    return employService.getAllEmploys();
+}
 
     @GetMapping("/{id}")
-    public ResponseEntity<Employ> getEmployById(@PathVariable Long id) {
-        Employ employ = employService.getEmployById(id);
-        if (employ != null) {
-            return ResponseEntity.ok(employ);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<EmployDto> getEmployById(@PathVariable Long id) {
+    EmployDto employ = employService.getEmployById(id);
+    if (employ != null) {
+        return ResponseEntity.ok(employ);
+    } else {
+        return ResponseEntity.notFound().build();
     }
+}
 
-    @PostMapping
-    public Employ creatEmployOffer(@RequestBody Employ employ) {
-        return employService.createEmployOffer(employ);
-    }
 
+    @PostMapping("/create")
+    public ResponseEntity<EmployDto> createEmployOffer(
+    @RequestParam("position") String position,
+    @RequestParam("description") String description,
+    @RequestParam("cvFile") MultipartFile cvFile,
+    @RequestParam("sectorId") int sectorId) {
+
+    EmployDto createdEmploy = employService.createEmployOffer(position, description, cvFile, sectorId);
+
+    return ResponseEntity.ok(createdEmploy);
+}
     @PutMapping("/{id}")
     public ResponseEntity<Employ> updateEmploy(@PathVariable Long id, @RequestBody Employ employDetails) {
         Employ employ = employService.updateEmployOffer(id, employDetails);
@@ -53,5 +63,8 @@ public class EmployController {
     public ResponseEntity<Void> deleteEmployOffer(@PathVariable Long id) {
         employService.deleteEmployOffer(id);
         return ResponseEntity.noContent().build();
-    }    
+    } 
 }
+
+       
+
