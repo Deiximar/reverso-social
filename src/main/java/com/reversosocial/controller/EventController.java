@@ -16,6 +16,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,5 +59,12 @@ public class EventController {
   @PreAuthorize("permitAll()")
   public ResponseEntity<EventDto> getEventById(@PathVariable Integer id) {
     return new ResponseEntity<>(eventService.getEventById(id), HttpStatus.OK);
+  }
+
+  @GetMapping("/search")
+  @PreAuthorize("permitAll()")
+  public ResponseEntity<List<EventDto>> searchEvents(@RequestParam("title") String title) {
+      List<EventDto> events = eventService.searchEventsByTitle(title);
+      return new ResponseEntity<>(events, HttpStatus.OK);
   }
 }

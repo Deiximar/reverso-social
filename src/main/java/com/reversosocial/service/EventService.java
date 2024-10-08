@@ -14,4 +14,6 @@ public interface EventService {
   EventDto updateEvent(Integer eventId, EventDto eventDto);
 
   EventDto getEventById(Integer eventId);
+
+  List<EventDto> searchEventsByTitle(String title);
 }
