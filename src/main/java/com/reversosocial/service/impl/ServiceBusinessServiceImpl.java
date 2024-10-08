@@ -106,6 +106,7 @@ public class ServiceBusinessServiceImpl implements ServiceBusinessService {
 
     private ServiceBusinessDto mapServiceToDto(ServiceBusiness serviceBusiness) {
         ServiceBusinessDto serviceBusinessDto = modelMapper.map(serviceBusiness, ServiceBusinessDto.class);
+        serviceBusinessDto.setCreatorEmail(serviceBusiness.getUser().getEmail());
         return serviceBusinessDto;
     }
 }

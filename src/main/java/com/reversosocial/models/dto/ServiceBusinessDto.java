@@ -30,5 +30,6 @@ public class ServiceBusinessDto {
     @Pattern(regexp = "^\\+?[0-9. ()-]{7,}$", message = "El número de teléfono debe ser válido si se proporciona.")
     private String phone_number;
     private String sector;
+    private String creatorEmail;
 
 }
