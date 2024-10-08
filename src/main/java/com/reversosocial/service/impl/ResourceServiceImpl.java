@@ -100,7 +100,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     private ResourceDto mapResourceToDto(Resource resource) {
         ResourceDto resourceDto = modelMapper.map(resource, ResourceDto.class);
-        
+        resourceDto.setCreatorEmail(resource.getUser().getEmail());
         return resourceDto;
     }
 
