@@ -54,10 +54,12 @@ public class GlobalExceptionHandler {
     ErrorObject errorObject = new ErrorObject();
 
     errorObject.setStatusCode(HttpStatus.BAD_REQUEST.value());
-    if (ex.getMessage().contains("DateTimeParseException")) {
+    if (ex.getMessage().contains("LocalTime")) {
+      errorObject.setMessage("La hora debe tener el formato HH:MM");
+    } else if (ex.getMessage().contains("LocalDate")) {
       errorObject.setMessage("La fecha debe tener el formato yyyy-MM-dd");
     } else {
-      errorObject.setMessage("Error al procesar la solicitud");
+      errorObject.setMessage(ex.getMessage());
     }
     errorObject.setTimestamp(new Date());
     return new ResponseEntity<>(errorObject, HttpStatus.BAD_REQUEST);
