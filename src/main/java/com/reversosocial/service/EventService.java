@@ -14,4 +14,8 @@ public interface EventService {
   EventDto updateEvent(Integer eventId, EventDto eventDto);
 
   EventDto getEventById(Integer eventId);
+
+  String subscribeUserToEvent(Integer eventId);
+
+  String unsubscribeUserToEvent(Integer eventId);
 }

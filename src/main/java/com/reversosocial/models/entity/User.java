@@ -2,6 +2,7 @@ package com.reversosocial.models.entity;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,5 +47,8 @@ public class User {
 
   @OneToMany(mappedBy = "user")
   private List<Event> events;
+
+  @OneToMany(mappedBy = "user")
+  private Set<Subscription> subscriptions;
 
 }
