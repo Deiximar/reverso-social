@@ -15,5 +15,6 @@ public class ResourceDto {
     private String url;
     private String description;
     private String file;
+    private String creatorEmail;
  
 }
