@@ -5,6 +5,8 @@ import java.util.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.reversosocial.config.exception.CustomException;
+import com.reversosocial.config.exception.EventFullException;
 import com.reversosocial.config.exception.ResourceNotFoundException;
 import com.reversosocial.config.exception.UsernameNotFoundException;
 import com.reversosocial.models.dto.EventDto;
@@ -106,6 +108,49 @@ public class EventServiceImpl implements EventService {
     Event event = eventRepository.findById(eventId)
         .orElseThrow(() -> new ResourceNotFoundException("Evento no encontrado."));
     return mapEventToDto(event);
+  }
+
+  @Override
+  public String subscribeUserToEvent(Integer eventId) {
+    Event event = eventRepository.findById(eventId)
+        .orElseThrow(() -> new ResourceNotFoundException("Evento no encontrado."));
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String userEmail = authentication.getName();
+    User user = userRepository.findByEmail(userEmail)
+        .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado."));
+
+    if (event.getSubscriptors().contains(user)) {
+      throw new CustomException("Ya estás suscrito a este evento.");
+    }
+
+    int currentParticipants = event.getSubscriptors().size();
+    if (currentParticipants >= event.getMaxParticipants()) {
+      throw new EventFullException("El evento ya esta lleno.");
+    }
+
+    event.getSubscriptors().add(user);
+    eventRepository.save(event);
+    return ("¡Te has subscripto al evento " + event.getTitle() + " con exito!");
+  }
+
+  @Override
+  public String unsubscribeUserToEvent(Integer eventId) {
+    Event event = eventRepository.findById(eventId)
+        .orElseThrow(() -> new ResourceNotFoundException("Evento no encontrado."));
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String userEmail = authentication.getName();
+    User user = userRepository.findByEmail(userEmail)
+        .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado."));
+
+    if (event.getSubscriptors().contains(user)) {
+      event.getSubscriptors().remove(user);
+      eventRepository.save(event);
+    } else {
+      throw new CustomException("No estás suscrito a este evento.");
+    }
+    return ("¡Te has desuscrito del evento " + event.getTitle() + " con exito!");
   }
 
   private Event mapEventToEntity(EventDto eventDto) {

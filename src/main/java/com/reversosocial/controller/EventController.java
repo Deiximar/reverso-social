@@ -59,4 +59,16 @@ public class EventController {
   public ResponseEntity<EventDto> getEventById(@PathVariable Integer id) {
     return new ResponseEntity<>(eventService.getEventById(id), HttpStatus.OK);
   }
+
+  @PostMapping("/{id}/subscribe")
+  @PreAuthorize("hasAuthority('PARTICIPATE')")
+  public ResponseEntity<String> subscribeUserToEvent(@PathVariable Integer id) {
+    return new ResponseEntity<>(eventService.subscribeUserToEvent(id), HttpStatus.OK);
+  }
+
+  @DeleteMapping("/{id}/unsubscribe")
+  @PreAuthorize("hasAuthority('PARTICIPATE')")
+  public ResponseEntity<String> unsubscribeUserToEvent(@PathVariable Integer id) {
+    return new ResponseEntity<>(eventService.unsubscribeUserToEvent(id), HttpStatus.OK);
+  }
 }
