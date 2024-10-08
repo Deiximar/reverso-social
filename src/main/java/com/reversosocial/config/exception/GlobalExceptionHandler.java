@@ -109,4 +109,24 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(errorObject, HttpStatus.UNAUTHORIZED);
   }
 
+  @ExceptionHandler(CustomException.class)
+  public ResponseEntity<ErrorObject> handleCustomException(CustomException ex) {
+
+    ErrorObject errorObject = new ErrorObject();
+    errorObject.setStatusCode(HttpStatus.CONFLICT.value());
+    errorObject.setMessage(ex.getMessage());
+    errorObject.setTimestamp(new Date());
+    return new ResponseEntity<>(errorObject, HttpStatus.CONFLICT);
+  }
+
+  @ExceptionHandler(EventFullException.class)
+  public ResponseEntity<ErrorObject> handleEventFullException(EventFullException ex) {
+
+    ErrorObject errorObject = new ErrorObject();
+    errorObject.setStatusCode(HttpStatus.CONFLICT.value());
+    errorObject.setMessage(ex.getMessage());
+    errorObject.setTimestamp(new Date());
+    return new ResponseEntity<>(errorObject, HttpStatus.CONFLICT);
+  }
+
 }
