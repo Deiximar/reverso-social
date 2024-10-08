@@ -66,7 +66,7 @@ public class EventController {
     return new ResponseEntity<>(eventService.subscribeUserToEvent(id), HttpStatus.OK);
   }
 
-  @DeleteMapping("/{id}/subscribe")
+  @DeleteMapping("/{id}/unsubscribe")
   @PreAuthorize("hasAuthority('PARTICIPATE')")
   public ResponseEntity<String> unsubscribeUserToEvent(@PathVariable Integer id) {
     return new ResponseEntity<>(eventService.unsubscribeUserToEvent(id), HttpStatus.OK);

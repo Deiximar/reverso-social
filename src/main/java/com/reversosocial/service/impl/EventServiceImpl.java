@@ -1,7 +1,6 @@
 package com.reversosocial.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -13,11 +12,9 @@ import com.reversosocial.config.exception.UsernameNotFoundException;
 import com.reversosocial.models.dto.EventDto;
 import com.reversosocial.models.entity.Event;
 import com.reversosocial.models.entity.Sector;
-import com.reversosocial.models.entity.Subscription;
 import com.reversosocial.models.entity.User;
 import com.reversosocial.repository.EventRepository;
 import com.reversosocial.repository.SectorRepository;
-import com.reversosocial.repository.SubscriptionRepository;
 import com.reversosocial.repository.UserRepository;
 import com.reversosocial.service.EventService;
 
@@ -35,7 +32,6 @@ public class EventServiceImpl implements EventService {
   private final UserRepository userRepository;
   private final ModelMapper modelMapper;
   private final SectorRepository sectorRepository;
-  private final SubscriptionRepository subscriptionRepository;
 
   @Override
   public EventDto createEvent(EventDto eventDto) {
@@ -116,7 +112,6 @@ public class EventServiceImpl implements EventService {
 
   @Override
   public String subscribeUserToEvent(Integer eventId) {
-
     Event event = eventRepository.findById(eventId)
         .orElseThrow(() -> new ResourceNotFoundException("Evento no encontrado."));
 
@@ -125,39 +120,37 @@ public class EventServiceImpl implements EventService {
     User user = userRepository.findByEmail(userEmail)
         .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado."));
 
-    Optional<Subscription> existingSubscription = subscriptionRepository.findByUserAndEvent(user, event);
-    if (existingSubscription.isPresent()) {
-      throw new CustomException("El usuario no está suscrito a este evento.");
+    if (event.getSubscriptors().contains(user)) {
+      throw new CustomException("Ya estás suscrito a este evento.");
     }
-    subscriptionRepository.delete(existingSubscription.get());
-    return ("¡Te has desuscrito del evento " + event.getTitle() + " con exito!");
-  }
 
-  @Override
-  public String unsubscribeUserToEvent(Integer eventId) {
-
-    Event event = eventRepository.findById(eventId)
-        .orElseThrow(() -> new ResourceNotFoundException("Evento no encontrado."));
-
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String userEmail = authentication.getName();
-    User user = userRepository.findByEmail(userEmail)
-        .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado."));
-
-    Optional<Subscription> existingSubscription = subscriptionRepository.findByUserAndEvent(user, event);
-    if (existingSubscription.isPresent()) {
-      throw new CustomException("El usuario ya está suscrito a este evento.");
-    }
-    int currentParticipants = subscriptionRepository.countByEvent(event);
+    int currentParticipants = event.getSubscriptors().size();
     if (currentParticipants >= event.getMaxParticipants()) {
       throw new EventFullException("El evento ya esta lleno.");
     }
 
-    Subscription subscription = new Subscription();
-    subscription.setUser(user);
-    subscription.setEvent(event);
-    subscriptionRepository.save(subscription);
+    event.getSubscriptors().add(user);
+    eventRepository.save(event);
     return ("¡Te has subscripto al evento " + event.getTitle() + " con exito!");
+  }
+
+  @Override
+  public String unsubscribeUserToEvent(Integer eventId) {
+    Event event = eventRepository.findById(eventId)
+        .orElseThrow(() -> new ResourceNotFoundException("Evento no encontrado."));
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String userEmail = authentication.getName();
+    User user = userRepository.findByEmail(userEmail)
+        .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado."));
+
+    if (event.getSubscriptors().contains(user)) {
+      event.getSubscriptors().remove(user);
+      eventRepository.save(event);
+    } else {
+      throw new CustomException("No estás suscrito a este evento.");
+    }
+    return ("¡Te has desuscrito del evento " + event.getTitle() + " con exito!");
   }
 
   private Event mapEventToEntity(EventDto eventDto) {
