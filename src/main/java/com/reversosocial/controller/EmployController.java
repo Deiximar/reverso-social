@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -41,7 +42,7 @@ public class EmployController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('CREATE')")
-    public ResponseEntity<EmployDto> createEmployOffer(@Valid @RequestBody EmployDto employDto) {
+    public ResponseEntity<EmployDto> createEmployOffer(@Valid @ModelAttribute EmployDto employDto) {
         EmployDto createdEmploy = employService.createEmploy(employDto);
         return new ResponseEntity<EmployDto>(createdEmploy, HttpStatus.CREATED);
     }
