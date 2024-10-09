@@ -67,4 +67,16 @@ public class EventController {
       List<EventDto> events = eventService.searchEventsByTitle(title);
       return new ResponseEntity<>(events, HttpStatus.OK);
   }
+
+  @PostMapping("/{id}/subscribe")
+  @PreAuthorize("hasAuthority('PARTICIPATE')")
+  public ResponseEntity<String> subscribeUserToEvent(@PathVariable Integer id) {
+    return new ResponseEntity<>(eventService.subscribeUserToEvent(id), HttpStatus.OK);
+  }
+
+  @DeleteMapping("/{id}/unsubscribe")
+  @PreAuthorize("hasAuthority('PARTICIPATE')")
+  public ResponseEntity<String> unsubscribeUserToEvent(@PathVariable Integer id) {
+    return new ResponseEntity<>(eventService.unsubscribeUserToEvent(id), HttpStatus.OK);
+  }
 }

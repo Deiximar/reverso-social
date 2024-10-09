@@ -1,46 +1,18 @@
 package com.reversosocial.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.reversosocial.models.entity.Employ;
-import com.reversosocial.repository.EmployRepository;
-
 import java.util.List;
 
-@Service
-public class EmployService {
-    
-    @Autowired
-    private EmployRepository employRepository;
+import com.reversosocial.models.dto.EmployDto;
 
-    public List<Employ> getAllEmploys() {
-        return employRepository.findAll();
-    }
+public interface EmployService {
+  List<EmployDto> getAllEmploys();
 
-    public Employ getEmployById(Long id) {
-        return employRepository.findById(id).orElse(null);
-    }
+  EmployDto getEmployById(Integer employId);
 
-    public Employ createEmployOffer(Employ employ) {
-        return employRepository.save(employ);
-    }
+  EmployDto createEmploy(EmployDto employDto);
 
-    public Employ updateEmployOffer(Long id, Employ employDetails) {
-        Employ employ = employRepository.findById(id).orElse(null);
-        if (employ != null) {
-            employ.setPosition(employDetails.getPosition());
-            employ.setCvUrl(employDetails.getCvUrl());
-            employ.setDescription(employDetails.getDescription());
-            employ.setUser(employDetails.getUser());
-            employ.setSector(employDetails.getSector());
+  EmployDto updateEmploy(Integer employId, EmployDto employDto);
 
-            return employRepository.save(employ);
-        }
-        return null;
-    }
+  String deleteEmploy(Integer employId);
 
-    public void deleteEmployOffer(Long id) {
-        employRepository.deleteById(id);
-    }
 }
