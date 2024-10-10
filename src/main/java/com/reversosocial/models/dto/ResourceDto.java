@@ -1,5 +1,7 @@
 package com.reversosocial.models.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +16,10 @@ public class ResourceDto {
     private String title;
     private String url;
     private String description;
-    private String file;
+
+    private MultipartFile file;
+    private String fileUrl;
+    
     private String creatorEmail;
  
 }
