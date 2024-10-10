@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.reversosocial.models.dto.EmployDto;
@@ -49,7 +48,8 @@ public class EmployController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('UPDATE')")
-    public ResponseEntity<EmployDto> updateEmploy(@PathVariable Integer id, @RequestBody EmployDto employDto) {
+    public ResponseEntity<EmployDto> updateEmploy(@PathVariable Integer id,
+            @Valid @ModelAttribute EmployDto employDto) {
         return new ResponseEntity<EmployDto>(employService.updateEmploy(id, employDto), HttpStatus.OK);
     }
 
