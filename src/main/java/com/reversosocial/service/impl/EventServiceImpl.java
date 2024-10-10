@@ -181,6 +181,8 @@ public String subscribeUserToEvent(Integer eventId) {
     EventDto eventDto = modelMapper.map(event, EventDto.class);
     eventDto.setCreatorEmail(event.getUser().getEmail());
     eventDto.setEventFull(event.isEventFull()); // Asegura que este método sea reconocido y se utilice correctamente
+    eventDto.setCurrentParticipants(event.getSubscriptors() != null ? event.getSubscriptors().size() : 0);
+
     return eventDto;
 }
   private boolean isOwnerOrAdmin(Event event, String userEmail, Authentication authentication) {
