@@ -41,7 +41,7 @@ public class EmployController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('CREATE')")
-    public ResponseEntity<EmployDto> createEmployOffer(@Valid @ModelAttribute EmployDto employDto) {
+    public ResponseEntity<EmployDto> createEmployOffer(@ModelAttribute @Valid EmployDto employDto) {
         EmployDto createdEmploy = employService.createEmploy(employDto);
         return new ResponseEntity<EmployDto>(createdEmploy, HttpStatus.CREATED);
     }
