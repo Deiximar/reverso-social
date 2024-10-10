@@ -27,8 +27,6 @@ public class EmployDto {
     @ValidPdf
     private MultipartFile curriculum;
 
-    // private String curriculum;
-
     @NotNull(message = "El campo descripción es requerido.")
     @NotEmpty(message = "El campo descripción es requerido.")
     @NotBlank(message = "El campo descripción es requerido.")
