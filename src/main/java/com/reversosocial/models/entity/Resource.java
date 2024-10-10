@@ -32,8 +32,8 @@ public class Resource {
     @Column(nullable = false, length = 1000)
     private String description;
     
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String file;
+    @Column(name="file_url",nullable = false )
+    private String fileUrl;
 
 
     @ManyToOne(fetch = FetchType.LAZY)

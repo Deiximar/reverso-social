@@ -14,6 +14,7 @@ import com.reversosocial.models.entity.Resource;
 import com.reversosocial.models.entity.User;
 import com.reversosocial.repository.ResourceRepository;
 import com.reversosocial.repository.UserRepository;
+import com.reversosocial.service.FileStorageService;
 import com.reversosocial.service.ResourceService;
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +25,7 @@ public class ResourceServiceImpl implements ResourceService {
     private final ResourceRepository resourceRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final FileStorageService fileStorageService;
 
     @Override
     public ResourceDto createResource(ResourceDto resourceDto) {
@@ -33,9 +35,10 @@ public class ResourceServiceImpl implements ResourceService {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado."));
 
+        String fileUrl= fileStorageService.storeFile(resourceDto.getFile());
         Resource resource = mapResourceToEntity(resourceDto);
         resource.setUser(user);
-
+        resource.setFileUrl(fileUrl);
         Resource createdResource = resourceRepository.save(resource);
         return mapResourceToDto(createdResource);
     }
@@ -75,10 +78,11 @@ public class ResourceServiceImpl implements ResourceService {
         if (!isOwnerOrAdmin(resource, userEmail, authentication)) {
             throw new AccessDeniedException("No tienes permiso para modificar este recurso");
         }
+        String fileUrl=fileStorageService.storeFile(resourceDto.getFile());
         resource.setTitle(resourceDto.getTitle());
         resource.setUrl(resourceDto.getUrl());
         resource.setDescription(resourceDto.getDescription());
-        resource.setFile(resourceDto.getFile());
+        resource.setFileUrl(fileUrl);
 
         Resource updatedResource = resourceRepository.save(resource);
         return mapResourceToDto(updatedResource);

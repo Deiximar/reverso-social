@@ -2,6 +2,8 @@ package com.reversosocial.service;
 
 import java.util.Map;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,14 +32,24 @@ public class FileStorageService {
 
     public String storeFile(MultipartFile file) {
 
-        try {
+       try {
+            String contentType = file.getContentType();
+            String resourceType = "application/pdf".equals(contentType) ? "row" : "auto";
+
+            String fileName = FilenameUtils.getBaseName(file.getOriginalFilename());
+            fileName = fileName.replaceAll("[^a-zA-Z0-9]", "");
+            fileName = fileName + "_" + RandomStringUtils.randomAlphanumeric(15);
+
             Map uploadResult = cloudinary.uploader().upload(file.getBytes(),
-                    ObjectUtils.asMap("resource_type", "raw"));
+                    ObjectUtils.asMap(
+                        "resource_type", resourceType,
+                        "public_id", fileName
+                        )
+                    );
             String publicUrl = uploadResult.get("secure_url").toString();
             return publicUrl;
         } catch (Exception e) {
             throw new RuntimeException("Error al subir el archivo a Cloudinary", e);
         }
     }
-
 }

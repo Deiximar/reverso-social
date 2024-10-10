@@ -11,9 +11,10 @@ import com.reversosocial.service.ResourceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -28,11 +29,10 @@ public class ResourceController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('CREATE')")
-    public ResponseEntity<ResourceDto> createResource(@RequestBody @Valid ResourceDto resourceDto) {
+    public ResponseEntity<ResourceDto> createResource( @ModelAttribute @Valid ResourceDto resourceDto) {
 
         ResourceDto createdRoutine = resourceService.createResource(resourceDto);
         return new ResponseEntity<>(createdRoutine, HttpStatus.CREATED);
-
     }
 
     @GetMapping
@@ -43,7 +43,7 @@ public class ResourceController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('UPDATE')")
-    public ResponseEntity<ResourceDto> updateResource(@PathVariable Integer id, @RequestBody ResourceDto resourceDto) {
+    public ResponseEntity<ResourceDto> updateResource(@PathVariable Integer id,  @ModelAttribute @Valid ResourceDto resourceDto) {
         return new ResponseEntity<>(resourceService.updateResource(id, resourceDto), HttpStatus.OK);
     }
 
