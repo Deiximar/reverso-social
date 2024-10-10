@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.sql.DataSource;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,7 @@ import com.reversosocial.models.entity.Permission;
 import com.reversosocial.models.entity.Role;
 import com.reversosocial.models.entity.Sector;
 import com.reversosocial.models.entity.User;
+import com.reversosocial.repository.EmployRepository;
 import com.reversosocial.repository.EventRepository;
 import com.reversosocial.repository.PermissionRepository;
 import com.reversosocial.repository.RoleRepository;
@@ -57,6 +60,9 @@ public class EventControllerTest {
 
   @Autowired
   SectorRepository sectorRepository;
+
+  @Autowired
+  EmployRepository employRepository;
 
   @Autowired
   UserRepository userRepository;
@@ -92,6 +98,7 @@ public class EventControllerTest {
       connection.createStatement().execute("ALTER SEQUENCE events_id_seq RESTART WITH 1");
     }
     eventRepository.deleteAll();
+    employRepository.deleteAll();
     userRepository.deleteAll();
     roleRepository.deleteAll();
     permissionRepository.deleteAll();
@@ -155,6 +162,16 @@ public class EventControllerTest {
     roleRepository.save(role);
     sectorRepository.save(sector);
     eventRepository.saveAll(List.of(event1, event2));
+  }
+
+  @AfterEach
+  void setUpAfter() {
+    eventRepository.deleteAll();
+    employRepository.deleteAll();
+    userRepository.deleteAll();
+    roleRepository.deleteAll();
+    permissionRepository.deleteAll();
+    sectorRepository.deleteAll();
   }
 
   @Test
