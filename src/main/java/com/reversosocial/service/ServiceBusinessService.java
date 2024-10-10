@@ -15,4 +15,7 @@ ServiceBusinessDto updateService(Integer serviceId, ServiceBusinessDto serviceBu
 List<ServiceBusinessDto> getAllServices();
 
 ServiceBusinessDto getServiceById(Integer serviceId);
+
+List<ServiceBusinessDto> searchServiceByTitle(String title);
+
 }

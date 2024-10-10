@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.reversosocial.models.dto.ServiceBusinessDto;
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @PreAuthorize("denyAll()")
 public class ServiceBusinessController {
+
     private final ServiceBusinessService serviceBusinessService;
 
     @PostMapping
@@ -59,4 +61,12 @@ public class ServiceBusinessController {
         return new ResponseEntity<>(serviceBusinessService.getServiceById(id), HttpStatus.OK);
 
     }
+
+    @GetMapping("/search")
+    @PreAuthorize("permitAll()") 
+    public ResponseEntity<List<ServiceBusinessDto>> searchServices(@RequestParam("title") String title) {
+        List<ServiceBusinessDto> services = serviceBusinessService.searchServiceByTitle(title);
+        return new ResponseEntity<>(services, HttpStatus.OK);
+    }
+    
 }

@@ -17,7 +17,7 @@ import com.reversosocial.repository.EventRepository;
 import com.reversosocial.repository.SectorRepository;
 import com.reversosocial.repository.UserRepository;
 import com.reversosocial.service.EventService;
-
+import java.util.stream.Collectors;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -188,6 +188,14 @@ public String subscribeUserToEvent(Integer eventId) {
         .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_FEMSENIORADMIN"));
     return event.getUser().getEmail().equals(userEmail) || isAdmin;
   }
+
+  @Override
+    public List<EventDto> searchEventsByTitle(String title) {
+        List<Event> events = eventRepository.findByTitleContainingIgnoreCase(title);
+        return events.stream()
+                     .map(this::mapEventToDto)  
+                     .collect(Collectors.toList()); 
+    }
   private User getCurrentUser() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {

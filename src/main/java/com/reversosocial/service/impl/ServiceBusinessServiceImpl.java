@@ -15,7 +15,7 @@ import com.reversosocial.repository.ServiceBusinessRepository;
 import com.reversosocial.repository.UserRepository;
 import com.reversosocial.service.ServiceBusinessService;
 import lombok.RequiredArgsConstructor;
-
+import java.util.stream.Collectors;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -108,5 +108,13 @@ public class ServiceBusinessServiceImpl implements ServiceBusinessService {
         ServiceBusinessDto serviceBusinessDto = modelMapper.map(serviceBusiness, ServiceBusinessDto.class);
         serviceBusinessDto.setCreatorEmail(serviceBusiness.getUser().getEmail());
         return serviceBusinessDto;
+    }
+
+    @Override
+    public List<ServiceBusinessDto> searchServiceByTitle(String title) {
+        List<ServiceBusiness> services = serviceBusinessRepository.findByTitleContainingIgnoreCase(title);
+        return services.stream()
+                       .map(this::mapServiceToDto)  
+                       .collect(Collectors.toList()); 
     }
 }
