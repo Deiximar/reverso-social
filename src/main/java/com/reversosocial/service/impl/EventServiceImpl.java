@@ -177,5 +177,4 @@ public class EventServiceImpl implements EventService {
                      .map(this::mapEventToDto)  
                      .collect(Collectors.toList()); 
     }
-
 }
