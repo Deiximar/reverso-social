@@ -34,7 +34,7 @@ public class FileStorageService {
 
        try {
             String contentType = file.getContentType();
-            String resourceType = "application/pdf".equals(contentType) ? "row" : "auto";
+            String resourceType = "application/pdf".equals(contentType) ? "raw" : "auto";
 
             String fileName = FilenameUtils.getBaseName(file.getOriginalFilename());
             fileName = fileName.replaceAll("[^a-zA-Z0-9]", "");
