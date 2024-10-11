@@ -53,4 +53,6 @@ public class EventDto {
   private boolean eventFull;
   private String creatorEmail;
   private boolean userSubscribed;
+
+  private Integer currentParticipants;
 }
