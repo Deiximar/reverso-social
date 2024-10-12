@@ -1,6 +1,6 @@
-# REVERSO SOCIAL - Backend
+# REVERSO SOCIAL - Backend 
 
-## Descripción General 🖥️
+## Descripción General 👭 💪
 Este proyecto es el backend de Reverso Social, una aplicación web que facilita la gestión integral de una comunidad dedicada a ofrecer eventos, servicios, oportunidades laborales y recursos específicos para colectivos vulnerables. La plataforma permite a las administradoras y Femsenior crear, editar, eliminar y visualizar estos recursos, mientras que las usuarias pueden participar activamente en los eventos y aprovechar los recursos disponibles.
 
 La aplicación está construida con Java Spring Boot y se conecta a una base de datos PostgreSQL para gestionar de forma segura y eficiente los datos. Además, utiliza Cloudinary para el almacenamiento y manejo de archivos en la nube, ofreciendo una solución escalable y confiable.
