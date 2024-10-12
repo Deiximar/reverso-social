@@ -40,19 +40,23 @@ public class UserServiceImpl implements UserService {
   public AuthResponseDto login(LoginDto request) {
     User user = userRepository.findByEmail(request.getEmail())
         .orElseThrow(() -> new UsernameNotFoundException(
-            "La contraseña o el correo electronico es incorrecta"));
+            "La contraseña o el correo electrónico es incorrecta"));
     try {
-      authenticationManager
-          .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),
-              request.getPassword()));
+      authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+          request.getEmail(), request.getPassword()));
       String token = jwtAuthenticationConfig.getJWToken(user.getEmail(), user.getRole());
-      return new AuthResponseDto(token);
+      String username = user.getUsername();
+  
+      return AuthResponseDto.builder()
+              .accessToken(token)
+              .username(username)
+              .build();
+  
     } catch (BadCredentialsException e) {
-      throw new InvalidCredentialsException("La contraseña o el correo electronico es incorrecta");
+      throw new InvalidCredentialsException("La contraseña o el correo electrónico es incorrecta");
     } catch (AuthenticationException e) {
       throw new RuntimeException("Error durante la autenticación: " + e.getMessage());
     }
-
   }
 
   @Override
