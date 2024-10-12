@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.reversosocial.models.dto.EmployDto;
 import com.reversosocial.service.impl.EmployServiceImpl;
@@ -57,5 +58,12 @@ public class EmployController {
     @PreAuthorize("hasAuthority('DELETE')")
     public ResponseEntity<String> deleteEmployOffer(@PathVariable Integer id) {
         return new ResponseEntity<>(employService.deleteEmploy(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<List<EmployDto>> searchEmploys(@RequestParam("position") String position){
+        List<EmployDto> employs = employService.searchEmploysByPosition(position);
+        return new ResponseEntity<>(employs, HttpStatus.OK);
     }
 }

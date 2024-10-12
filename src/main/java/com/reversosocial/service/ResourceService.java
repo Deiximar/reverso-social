@@ -15,4 +15,5 @@ public interface ResourceService {
 
     ResourceDto getResourceById(Integer resourceId);
 
+    List<ResourceDto> searchResourcesByTitle(String title);
 }

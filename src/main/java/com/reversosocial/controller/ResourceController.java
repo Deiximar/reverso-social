@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/resources")
@@ -59,4 +61,11 @@ public class ResourceController {
         return new ResponseEntity<>(resourceService.getResourceById(id), HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<List<ResourceDto>> searchResource(@RequestParam("title") String title) {
+        List<ResourceDto> resource = resourceService.searchResourcesByTitle(title);
+        return new ResponseEntity<>(resource, HttpStatus.OK);
+    }
+    
 }

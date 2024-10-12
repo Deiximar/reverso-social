@@ -15,4 +15,6 @@ public interface EmployService {
 
   String deleteEmploy(Integer employId);
 
+  List<EmployDto> searchEmploysByPosition(String position);
+
 }

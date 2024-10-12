@@ -5,7 +5,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
+import java.util.stream.Collectors;
 import com.reversosocial.config.exception.ResourceNotFoundException;
 import com.reversosocial.config.exception.UsernameNotFoundException;
 import com.reversosocial.models.dto.EmployDto;
@@ -120,5 +120,13 @@ public class EmployServiceImpl implements EmployService {
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_FEMSENIORADMIN"));
         return employ.getUser().getEmail().equals(userEmail) || isAdmin;
+    }
+
+    @Override
+    public List<EmployDto> searchEmploysByPosition(String position) {
+        List<Employ> employs = employRepository.findByPositionContainingIgnoreCase(position);
+        return employs.stream()
+            .map(this::mapEmployToDto)
+            .collect(Collectors.toList());
     }
 }
