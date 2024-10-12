@@ -2,7 +2,7 @@ package com.reversosocial.service.impl;
 
 import java.util.List;
 import org.modelmapper.ModelMapper;
-
+import java.util.stream.Collectors;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -112,5 +112,13 @@ public class ResourceServiceImpl implements ResourceService {
         boolean isAdmin = authentication.getAuthorities().stream()
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_FEMSENIORADMIN"));
         return isOwner || isAdmin;
+    }
+
+    @Override
+    public List<ResourceDto> searchResourcesByTitle(String title) {
+        List<Resource> resource = resourceRepository.findByTitleContainingIgnoreCase(title);
+        return resource.stream()
+        .map(this::mapResourceToDto)
+        .collect(Collectors.toList());
     }
 }

@@ -108,49 +108,49 @@ public class EventServiceImpl implements EventService {
   public EventDto getEventById(Integer eventId) {
     Event event = eventRepository.findById(eventId)
         .orElseThrow(() -> new ResourceNotFoundException("Evento no encontrado."));
-    
+
     EventDto eventDto = mapEventToDto(event);
-    
+
     // Obtener el usuario actual
     User currentUser = getCurrentUser();
-    
+
     // Determinar si el usuario está suscrito al evento
     boolean isUserSubscribed = false;
     if (currentUser != null) {
       isUserSubscribed = event.getSubscriptors().stream()
-      .anyMatch(user -> user.getId() == currentUser.getId());
+          .anyMatch(user -> user.getId() == currentUser.getId());
     }
-    
+
     // Establecer el campo isUserSubscribed en el EventDto
     eventDto.setUserSubscribed(isUserSubscribed);
-    
+
     return eventDto;
-}
+  }
 
   @Override
-public String subscribeUserToEvent(Integer eventId) {
+  public String subscribeUserToEvent(Integer eventId) {
     Event event = eventRepository.findById(eventId)
         .orElseThrow(() -> new ResourceNotFoundException("Evento no encontrado."));
 
-    User user = getCurrentUser(); 
+    User user = getCurrentUser();
 
     // Verifica si el evento ya está lleno.
     if (event.isEventFull()) {
-        throw new EventFullException("El evento ya está lleno.");
+      throw new EventFullException("El evento ya está lleno.");
     }
 
     // Verifica si el usuario ya está suscrito.
     if (event.getSubscriptors().contains(user)) {
-        throw new CustomException("Ya estás suscrito a este evento.");
+      throw new CustomException("Ya estás suscrito a este evento.");
     }
 
     // Agrega el usuario a la lista de suscriptores y actualiza el estado de isFull.
     event.getSubscriptors().add(user);
-    event.checkAndUpdateIsFull(); 
+    event.checkAndUpdateIsFull();
 
     eventRepository.save(event);
     return "¡Te has suscrito al evento " + event.getTitle() + " con éxito!";
-}
+  }
 
   @Override
   public String unsubscribeUserToEvent(Integer eventId) {
@@ -184,7 +184,8 @@ public String subscribeUserToEvent(Integer eventId) {
     eventDto.setCurrentParticipants(event.getSubscriptors() != null ? event.getSubscriptors().size() : 0);
 
     return eventDto;
-}
+  }
+
   private boolean isOwnerOrAdmin(Event event, String userEmail, Authentication authentication) {
     boolean isAdmin = authentication.getAuthorities().stream()
         .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_FEMSENIORADMIN"));
@@ -192,19 +193,21 @@ public String subscribeUserToEvent(Integer eventId) {
   }
 
   @Override
-    public List<EventDto> searchEventsByTitle(String title) {
-        List<Event> events = eventRepository.findByTitleContainingIgnoreCase(title);
-        return events.stream()
-                     .map(this::mapEventToDto)  
-                     .collect(Collectors.toList()); 
-    }
+  public List<EventDto> searchEventsByTitle(String title) {
+    List<Event> events = eventRepository.findByTitleContainingIgnoreCase(title);
+    return events.stream()
+        .map(this::mapEventToDto)
+        .collect(Collectors.toList());
+  }
+
   private User getCurrentUser() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+    if (authentication == null || !authentication.isAuthenticated()
+        || authentication instanceof AnonymousAuthenticationToken) {
       return null;
     }
     String userEmail = authentication.getName();
     return userRepository.findByEmail(userEmail)
         .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado."));
-}
   }
+}
