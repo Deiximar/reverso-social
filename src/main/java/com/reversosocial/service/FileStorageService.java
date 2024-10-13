@@ -31,6 +31,10 @@ public class FileStorageService {
     }
 
     public String storeFile(MultipartFile file) {
+        
+    if (file == null || file.isEmpty()) {
+        return null;
+    }
 
        try {
             String contentType = file.getContentType();
