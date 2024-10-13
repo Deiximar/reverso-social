@@ -226,7 +226,7 @@ git push origin feature/nueva-funcionalidad
 
 5. “Envía un Pull Request para revisión”.
 
-   ## Integración con FrontEnd 🔗
+## Integración con FrontEnd 🔗
    
  Para obtener detalles sobre la configuración del frontend, consulta el README del [FrontEnd README.](https://github.com/Paola077/Reverso_social_FrontEnd)
 
