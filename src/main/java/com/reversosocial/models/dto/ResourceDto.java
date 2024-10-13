@@ -22,7 +22,7 @@ public class ResourceDto {
     @NotBlank(message = "El campo título es requerido.")
     private String title;
 
-    @NotBlank(message = "El campo enlace es requerido.")
+   /*  @NotBlank(message = "El campo enlace es requerido.") */
     @Pattern(regexp = "^(https?:\\/\\/)?(www\\.)?[a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)$", message = "El campo enlace debe ser una URL válida.")
     private String url;
 
@@ -31,7 +31,7 @@ public class ResourceDto {
     @NotBlank(message = "El campo descripción es requerido.")
     private String description;
 
-    @NotNull(message = "El campo documento es requerido.")
+    /* @NotNull(message = "El campo documento es requerido.") */
     private MultipartFile file;
     private String fileUrl;
 

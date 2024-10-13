@@ -27,12 +27,12 @@ public class Resource {
     private int id;
     @Column(nullable = false)
     private String title;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String url;
     @Column(nullable = false, length = 1000)
     private String description;
     
-    @Column(name="file_url",nullable = false )
+    @Column(name="file_url",nullable = true )
     private String fileUrl;
 
 

@@ -31,6 +31,12 @@ public class FileStorageService {
     }
 
     public String storeFile(MultipartFile file) {
+         // Verifica si el archivo es nulo o está vacío
+    if (file == null || file.isEmpty()) {
+        // Puedes lanzar una excepción o devolver un valor por defecto
+        return null;
+        // return null;
+    }
 
        try {
             String contentType = file.getContentType();
