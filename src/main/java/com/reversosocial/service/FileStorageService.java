@@ -43,7 +43,7 @@ public class FileStorageService {
             Map uploadResult = cloudinary.uploader().upload(file.getBytes(),
                     ObjectUtils.asMap(
                         "resource_type", resourceType,
-                        "public_id", fileName
+                        "public_id", fileName + ".pdf"
                         )
                     );
             String publicUrl = uploadResult.get("secure_url").toString();
