@@ -1,9 +1,29 @@
 # REVERSO SOCIAL - Backend 
 
 ## Descripción General 👭 💪
-Este proyecto es el backend de Reverso Social, una aplicación web que facilita la gestión integral de una comunidad dedicada a ofrecer eventos, servicios, oportunidades laborales y recursos específicos para colectivos vulnerables. La plataforma permite a las administradoras y Femsenior crear, editar, eliminar y visualizar estos recursos, mientras que las usuarias pueden participar activamente en los eventos y aprovechar los recursos disponibles.
+Este proyecto, desarrollado como parte del programa pedagógico de Factoria F5, es un proyecto final creado en colaboración con un cliente real. La plataforma promueve la igualdad de género y el empoderamiento de las mujeres mediante dos enfoques principales: Planes de Igualdad y FEMsenior.
 
-La aplicación está construida con Java Spring Boot y se conecta a una base de datos PostgreSQL para gestionar de forma segura y eficiente los datos. Además, utiliza Cloudinary para el almacenamiento y manejo de archivos en la nube, ofreciendo una solución escalable y confiable.
+Planes de Igualdad:
+Dirigido a cargos políticos, sindicales, administraciones públicas y empresas privadas. Este módulo tiene como objetivo eliminar todas las formas de discriminación basadas en sexo, género, orientación sexual, origen, religión o clase social, ofreciendo recursos y herramientas para fomentar la igualdad en diversos ámbitos.
+
+FEMsenior:
+FEMsenior es una comunidad creada para mujeres de 50 años o más, con el fin de desafiar los estereotipos relacionados con la edad. Este espacio permite a las usuarias compartir experiencias, participar en eventos, y acceder a oportunidades de empleo y recursos que destacan el poder de la edad como fuente de fortaleza.
+
+La plataforma permite:
+
+- Crear, editar y eliminar eventos: Las administradoras y Femsenior pueden gestionar las distintas secciones tales como son los eventos, los servicios, empleo y recursos desde su creación hasta su eliminación.   
+- Acceder a recursos y participación activa: Las usuarias pueden explorar y aprovechar los recursos disponibles, incluyendo mentorías que ofreceran las FemSenior, formaciones y los recursos que se compartan en la comunidad.   
+- Unirse a una comunidad activa: La comunidad facilita la colaboración y el apoyo entre mujeres de distintas edades y trasfondos, ofreciendo un espacio para mentorías, participación en servicios y acceso a herramientas tales como una sección de empleo donde podrán 
+  subir sus currículumns para que promuevan su desarrollo personal y profesional.   
+- Este proyecto invita a mujeres y entidades comprometidas con la igualdad a colaborar en la construcción de un futuro más equitativo.
+
+     
+![image](https://github.com/user-attachments/assets/abd87b59-7619-43bb-8407-1b7ba0638130)
+
+
+
+       
+
 
 ## Características Principales 🚀
 
@@ -65,7 +85,7 @@ Este enfoque modular facilita la mantenibilidad y escalabilidad del proyecto, pe
 |   |    |     |     ├── GlobalExceptionHandler
 |   |    |     |     ├── InvalidCredentialsException
 |   |    |     |     ├── ResourceNotFoundException
-|   |    |     |     └──  UsernameNotFoundException
+|   |    |     |     └── UsernameNotFoundException
 |   |    |     ├── security 
 |   |    |          ├── jwt
 |   |    |          |   ├── JWTAuthenticationConfig
@@ -119,7 +139,7 @@ Este enfoque modular facilita la mantenibilidad y escalabilidad del proyecto, pe
 │   │    │      ├── EventService
 │   │    │      ├── FileStorageService
 │   │    │      ├── ResourceService
-│   │    │      ├── SeeerviceBusinessService
+│   │    │      ├── ServiceBusinessService
 │   │    │      └── UserService
 │   │    │── ReversosocialApplication     
 │   │    ├── resources
@@ -204,7 +224,7 @@ git commit -m 'Añadir nueva funcionalidad'
 git push origin feature/nueva-funcionalidad
 ```
 
-5. Abre un Pull Request.
+5. “Envía un Pull Request para revisión”.
 
    ## Integración con FrontEnd 🔗
    
