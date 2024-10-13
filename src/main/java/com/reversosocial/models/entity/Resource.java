@@ -35,6 +35,9 @@ public class Resource {
     @Column(name="file_url",nullable = true )
     private String fileUrl;
 
+    @Column(name="file_name", nullable = true, length = 500)
+    private String fileName;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

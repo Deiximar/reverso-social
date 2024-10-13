@@ -1,6 +1,10 @@
 package com.reversosocial.service.impl;
 
 import java.util.List;
+
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import java.util.stream.Collectors;
 import org.springframework.security.access.AccessDeniedException;
@@ -39,6 +43,11 @@ public class ResourceServiceImpl implements ResourceService {
         Resource resource = mapResourceToEntity(resourceDto);
         resource.setUser(user);
         resource.setFileUrl(fileUrl);
+        if (resourceDto.getFile() != null && StringUtils.isNotEmpty(fileUrl)) {
+            String fileName = FilenameUtils.getName(resourceDto.getFile().getOriginalFilename());
+            fileName = fileName.replaceAll("[^a-zA-Z0-9.-_]", "");
+            resource.setFileName(fileName);
+        }
         Resource createdResource = resourceRepository.save(resource);
         return mapResourceToDto(createdResource);
     }
@@ -78,11 +87,21 @@ public class ResourceServiceImpl implements ResourceService {
         if (!isOwnerOrAdmin(resource, userEmail, authentication)) {
             throw new AccessDeniedException("No tienes permiso para modificar este recurso");
         }
-        String fileUrl=fileStorageService.storeFile(resourceDto.getFile());
         resource.setTitle(resourceDto.getTitle());
         resource.setUrl(resourceDto.getUrl());
         resource.setDescription(resourceDto.getDescription());
-        resource.setFileUrl(fileUrl);
+        
+        if (BooleanUtils.isTrue(resourceDto.getShouldModifyFile())) {
+            String fileUrl=fileStorageService.storeFile(resourceDto.getFile());
+            resource.setFileUrl(fileUrl);
+            if (resourceDto.getFile() != null && StringUtils.isNotEmpty(fileUrl)) {
+                String fileName = FilenameUtils.getName(resourceDto.getFile().getOriginalFilename());
+                fileName = fileName.replaceAll("[^a-zA-Z0-9.-_]", "");
+                resource.setFileName(fileName);
+            } else {
+                resource.setFileName(null);
+            }
+        }
 
         Resource updatedResource = resourceRepository.save(resource);
         return mapResourceToDto(updatedResource);
@@ -98,7 +117,19 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     private Resource mapResourceToEntity(ResourceDto resourceDto) {
-        return modelMapper.map(resourceDto, Resource.class);
+
+        Resource resource = new Resource();
+        if (resourceDto.getId() != null) {
+            resource.setId(resourceDto.getId());
+        }
+        resource.setDescription(resourceDto.getDescription());
+        resource.setFileUrl(resourceDto.getFileUrl());
+        resource.setTitle(resourceDto.getTitle());
+        resource.setUrl(resourceDto.getUrl());
+        resource.setFileName(resourceDto.getFileName());
+
+        return resource;
+
     }
 
     private ResourceDto mapResourceToDto(Resource resource) {

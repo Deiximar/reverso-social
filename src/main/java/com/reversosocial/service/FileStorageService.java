@@ -25,9 +25,6 @@ public class FileStorageService {
                 "api_key", apiKey,
                 "api_secret", apiSecret));
 
-        System.out.println("name: " + cloudName);
-        System.out.println("key: " + apiKey);
-        System.out.println("secret: " + apiSecret);
     }
 
     public String storeFile(MultipartFile file) {
