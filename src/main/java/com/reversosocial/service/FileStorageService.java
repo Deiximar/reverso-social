@@ -37,8 +37,6 @@ public class FileStorageService {
     }
 
        try {
-            String contentType = file.getContentType();
-            String resourceType = "application/pdf".equals(contentType) ? "raw" : "auto";
 
             String fileName = FilenameUtils.getBaseName(file.getOriginalFilename());
             fileName = fileName.replaceAll("[^a-zA-Z0-9]", "");
@@ -46,8 +44,8 @@ public class FileStorageService {
 
             Map uploadResult = cloudinary.uploader().upload(file.getBytes(),
                     ObjectUtils.asMap(
-                        "resource_type", resourceType,
-                        "public_id", fileName + ".pdf"
+                        "resource_type", "auto",
+                        "public_id", fileName 
                         )
                     );
             String publicUrl = uploadResult.get("secure_url").toString();
