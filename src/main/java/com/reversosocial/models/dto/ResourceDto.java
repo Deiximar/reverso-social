@@ -32,6 +32,8 @@ public class ResourceDto {
 
     private MultipartFile file;
     private String fileUrl;
+    private String fileName;
+    private Boolean shouldModifyFile;
 
     private String creatorEmail;
 
