@@ -36,17 +36,14 @@ public class AuthControllerTest {
 
     @Test
     void shouldLoginAUserSuccessfully() {
-        // Given
         LoginDto loginDto = new LoginDto();
         loginDto.setEmail("test@test.com");
         loginDto.setPassword("password");
 
         AuthResponseDto authResponseDto = new AuthResponseDto("token");
 
-        // When
         when(userService.login(loginDto)).thenReturn(authResponseDto);
 
-        // Then
         ResponseEntity<AuthResponseDto> response = authController.login(loginDto);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -56,7 +53,6 @@ public class AuthControllerTest {
 
     @Test
     void shouldRegisterANewUserSuccessfully() {
-        // Given
         RegisterDto registerDto = new RegisterDto();
         registerDto.setUsername("Maria07");
         registerDto.setName("Maria");
@@ -69,10 +65,8 @@ public class AuthControllerTest {
 
         String responseMessage = "User registered successfully";
 
-        // When
         when(userService.register(registerDto)).thenReturn(responseMessage);
 
-        // then
         ResponseEntity<String> response = authController.register(registerDto);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(responseMessage, response.getBody());
