@@ -74,7 +74,7 @@ Este enfoque modular facilita la mantenibilidad y escalabilidad del proyecto, pe
 │   │    │     ├── exception
 |   |    |     |     ├── validation
 |   |    |     |     |   ├── anotation
-|   |    |     |     |       └── ValdPdf
+|   |    |     |     |   |    └── ValdPdf
 |   |    |     |     |   └── validator
 |   |    |     |     |       └──  PdfFileValidator
 |   |    |     |     ├── CustomException
