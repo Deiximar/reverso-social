@@ -104,7 +104,6 @@ public class EventServiceImplTest {
 
   @Test
   public void shouldFindAllEventsSuccesfully() {
-    // given
     EventDto eventDto1 = EventDto.builder()
         .title("Evento 1")
         .date(LocalDate.of(2024, 12, 10))
@@ -129,11 +128,9 @@ public class EventServiceImplTest {
     given(modelMapper.map(this.events.get(0), EventDto.class)).willReturn(eventDto1);
     given(modelMapper.map(this.events.get(1), EventDto.class)).willReturn(eventDto2);
 
-    // when
     List<EventDto> eventsDto = eventService.getAllEvents();
     verify(eventRepository, times(1)).findAll();
 
-    // then
     assertThat(eventsDto.size()).isEqualTo(events.size());
     assertThat(eventsDto.get(0).getTitle()).isEqualTo(this.events.get(0).getTitle());
     assertThat(eventsDto.get(0).getModality()).isEqualTo(this.events.get(0).getModality());
@@ -144,12 +141,10 @@ public class EventServiceImplTest {
 
   @Test
   public void shouldThrowExceptionWhenEventsIsEmpty() {
-    // given
     List<Event> events = new ArrayList<>();
     given(eventRepository.findAll()).willReturn(events);
     String message = "No hay eventos disponibles";
 
-    // when and then
     ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
       eventService.getAllEvents();
     });
@@ -160,7 +155,6 @@ public class EventServiceImplTest {
   @Test
   public void shouldFindAnEventsByIdSuccesfully() {
 
-    // given
     Integer eventId = 2;
     EventDto eventDto = EventDto.builder()
         .title("Evento 2")
@@ -186,12 +180,10 @@ public class EventServiceImplTest {
 
   @Test
   public void shouldThrowExceptionWhenEventNotFound() {
-    // given
     int eventId = 1;
     given(eventRepository.findById(eventId)).willReturn(Optional.empty());
     String message = "Evento no encontrado";
 
-    // when / then
     ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
       eventService.getEventById(eventId);
     });
@@ -201,40 +193,33 @@ public class EventServiceImplTest {
 
   @Test
   public void shouldDeleteAnEventWhenUserIsOwner() {
-    // given
     given(eventRepository.findById(1)).willReturn(Optional.of(this.events.get(0)));
 
     given(authentication.getName()).willReturn("testuser@example.com");
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
-    // when
     String result = eventService.deleteEvent(1);
 
-    // then
     verify(eventRepository, times(1)).delete(this.events.get(0));
     assertThat(result.equals("El evento ha sido eliminado exitosamente."));
   }
 
   @Test
   public void shouldNotDeleteAnEventWhenUserIsNotOwner() {
-    // given
     given(eventRepository.findById(1)).willReturn(Optional.of(this.events.get(0)));
     given(authentication.getName()).willReturn("otheruser@example.com");
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
-    // when
     Exception exception = assertThrows(AccessDeniedException.class, () -> {
       eventService.deleteEvent(1);
     });
 
-    // that
     assertThat(exception.getMessage().equals("No tienes permiso para acceder a este recurso."));
     verify(eventRepository, times(0)).deleteById(1);
   }
 
   @Test
   void shouldCreateANewEventSuccesfully() {
-    // given
     SecurityContextHolder.getContext().setAuthentication(authentication);
     GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("CREATE");
     Collection<GrantedAuthority> grantedAuthorities = Collections.singletonList(grantedAuthority);
@@ -256,7 +241,6 @@ public class EventServiceImplTest {
     given(modelMapper.map(this.events.get(0), EventDto.class)).willReturn(eventDto);
     given(eventRepository.save(any(Event.class))).willReturn(this.events.get(0));
 
-    // when
     EventDto result = eventService.createEvent(eventDto);
 
     assertThat("Evento 1".equals(result.getTitle()));

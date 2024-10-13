@@ -97,7 +97,6 @@ public class UserServiceImplTest {
 
   @Test
   void shouldRegisterANewUserSuccessfully() {
-    // given
     User newUser = new User();
     newUser.setId(3);
     newUser.setName("user");
@@ -123,13 +122,11 @@ public class UserServiceImplTest {
 
     String responseMessage = "Usuario registrado exitosamente";
 
-    // when
     String response = userService.register(userDto);
     ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
     verify(userRepository, times(1)).save(userCaptor.capture());
     User savedUser = userCaptor.getValue();
 
-    // then
     assertEquals(responseMessage, response);
     assertEquals("encodedPassword", savedUser.getPassword());
     assertEquals(userRole, savedUser.getRole());
@@ -138,7 +135,6 @@ public class UserServiceImplTest {
 
   @Test
   void shouldThrowExceptionWhenEmailAlreadyExists() {
-    // given
     User newUser = new User();
     newUser.setId(3);
     newUser.setName("user");
@@ -162,7 +158,6 @@ public class UserServiceImplTest {
     given(userRepository.findByEmail(userDto.getEmail())).willReturn(Optional.of(existingUser));
     String responseMessage = "Este correo electronico ya esta en uso.";
 
-    // when & then
     ExistingEmailException response = assertThrows(ExistingEmailException.class, () -> {
       userService.register(userDto);
     });
@@ -174,7 +169,6 @@ public class UserServiceImplTest {
 
   @Test
   void shouldThrowExceptionWhenUserNameAlreadyExists() {
-    // given
     User newUser = new User();
     newUser.setId(3);
     newUser.setName("user");
@@ -198,7 +192,6 @@ public class UserServiceImplTest {
     given(userRepository.findByUsername(userDto.getUsername())).willReturn(Optional.of(existingUser));
     String responseMessage = "Este nombre de usuario ya esta en uso.";
 
-    // when & then
     ExistingUsernameException response = assertThrows(ExistingUsernameException.class, () -> {
       userService.register(userDto);
     });
@@ -209,7 +202,6 @@ public class UserServiceImplTest {
 
   @Test
   void shouldLoginUserSuccessfully() {
-    // given
     Set<Permission> permissions = Set.of(Permission.builder().id(1).permission(EPermission.READ).build());
     Role role = new Role();
     role.setId(1);
@@ -229,16 +221,13 @@ public class UserServiceImplTest {
     Authentication auth = mock(Authentication.class);
     given(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).willReturn(auth);
 
-    // when
     AuthResponseDto response = userService.login(request);
-    // then
     assertEquals(token, response.getAccessToken());
 
   }
 
   @Test
   void shouldThrowInvalidCredentialsExceptionWhenBadCredentials() {
-    // given
     LoginDto LoginDto = new LoginDto();
     LoginDto.setEmail("test@test.com");
     LoginDto.setPassword("wrongPassword");
@@ -252,7 +241,6 @@ public class UserServiceImplTest {
         .when(authenticationManager)
         .authenticate(any(UsernamePasswordAuthenticationToken.class));
 
-    // when & then
     assertThrows(InvalidCredentialsException.class, () -> {
       userService.login(LoginDto);
     });
@@ -260,14 +248,12 @@ public class UserServiceImplTest {
 
   @Test
   void shouldThrowUsernameNotFoundExceptionWhenUserDoesNotExist() {
-    // given
     LoginDto loginDto = new LoginDto();
     loginDto.setEmail("nonexistent@test.com");
     loginDto.setPassword("password123");
 
     given(userRepository.findByEmail(loginDto.getEmail())).willReturn(Optional.empty());
 
-    // when & then
     assertThrows(UsernameNotFoundException.class, () -> {
       userService.login(loginDto);
     });

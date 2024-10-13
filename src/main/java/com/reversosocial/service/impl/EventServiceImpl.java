@@ -111,17 +111,14 @@ public class EventServiceImpl implements EventService {
 
     EventDto eventDto = mapEventToDto(event);
 
-    // Obtener el usuario actual
     User currentUser = getCurrentUser();
 
-    // Determinar si el usuario está suscrito al evento
     boolean isUserSubscribed = false;
     if (currentUser != null) {
       isUserSubscribed = event.getSubscriptors().stream()
           .anyMatch(user -> user.getId() == currentUser.getId());
     }
 
-    // Establecer el campo isUserSubscribed en el EventDto
     eventDto.setUserSubscribed(isUserSubscribed);
 
     return eventDto;
@@ -134,17 +131,14 @@ public class EventServiceImpl implements EventService {
 
     User user = getCurrentUser();
 
-    // Verifica si el evento ya está lleno.
     if (event.isEventFull()) {
       throw new EventFullException("El evento ya está lleno.");
     }
 
-    // Verifica si el usuario ya está suscrito.
     if (event.getSubscriptors().contains(user)) {
       throw new CustomException("Ya estás suscrito a este evento.");
     }
 
-    // Agrega el usuario a la lista de suscriptores y actualiza el estado de isFull.
     event.getSubscriptors().add(user);
     event.checkAndUpdateIsFull();
 
