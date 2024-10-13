@@ -201,7 +201,7 @@ Debes configurar las siguientes variables de entorno en tu archivo .env o applic
 - CLOUDINARY_API_SECRET: API Secret de Cloudinary.
 - CLOUDINARY_CLOUD_NAME: Nombre del Cloudinary.
   
-## Contribución 👥
+## Contribución 🤝
 
 Si deseas contribuir a este proyecto, sigue los siguientes pasos:
 
